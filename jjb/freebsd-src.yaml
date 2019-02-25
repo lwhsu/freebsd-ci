@@ -1,5 +1,6 @@
 - project:
     name: FreeBSD-amd64
+    disabled: true
     target_arch:
       - amd64
     branch:
@@ -14,6 +15,7 @@
 
 - project:
     name: FreeBSD-head-amd64
+    disabled: true
     target_arch:
       - amd64
     branch:
@@ -25,6 +27,7 @@
 
 - project:
     name: FreeBSD-aarch64
+    disabled: true
     target_arch:
       - aarch64
     branch:
@@ -39,6 +42,7 @@
 
 - project:
     name: FreeBSD-armv6
+    disabled: true
     target_arch:
       - armv6
     branch:
@@ -53,6 +57,7 @@
 
 - project:
     name: FreeBSD-armv7
+    disabled: true
     target_arch:
       - armv7
     branch:
@@ -65,6 +70,7 @@
 
 - project:
     name: FreeBSD-i386
+    disabled: true
     target_arch:
       - i386
     branch:
@@ -80,6 +86,7 @@
 
 - project:
     name: FreeBSD-mips
+    disabled: true
     target_arch:
       - mips
     branch:
@@ -93,6 +100,7 @@
 
 - project:
     name: FreeBSD-mips64
+    disabled: true
     target_arch:
       - mips64
     branch:
@@ -106,6 +114,7 @@
 
 - project:
     name: FreeBSD-powerpc
+    disabled: true
     target_arch:
       - powerpc
     branch:
@@ -120,6 +129,7 @@
 
 - project:
     name: FreeBSD-powerpc64
+    disabled: true
     target_arch:
       - powerpc64
     branch:
@@ -134,6 +144,7 @@
 
 - project:
     name: FreeBSD-powerpcspe
+    disabled: true
     target_arch:
       - powerpcspe
     branch:
@@ -146,6 +157,7 @@
 
 - project:
     name: FreeBSD-riscv64
+    disabled: true
     target_arch:
       - riscv64
     branch:
@@ -161,6 +173,7 @@
 
 - project:
     name: FreeBSD-sparc64
+    disabled: true
     target_arch:
       - sparc64
     branch:
@@ -176,6 +189,7 @@
 
 - project:
     name: FreeBSD-srcproj
+    disabled: true
     target_arch:
       - aarch64
       - amd64
@@ -190,6 +204,7 @@
 - job:
     name: FreeBSD-head-scan_build
     defaults: global
+    disabled: true
     node: jailer
     scm:
       - FreeBSD-src-head
@@ -214,6 +229,7 @@
 - job:
     name: FreeBSD-head-amd64-gcc
     defaults: global
+    disabled: true
     node: jailer
     scm:
       - FreeBSD-src-head
@@ -240,6 +256,7 @@
 - job:
     name: FreeBSD-head-amd64-dtrace_build
     defaults: global
+    disabled: true
     node: jailer_fast
     scm:
       - FreeBSD-src-head
@@ -287,6 +304,7 @@
 - job:
     defaults: global
     name: FreeBSD-head-amd64-dtrace_testvm
+    disabled: true
     node: jailer_fast
     scm:
       - FreeBSD-src-head-empty
@@ -328,6 +346,7 @@
 
 - job:
     name: FreeBSD-head-amd64-dtrace_test
+    disabled: true
     node: bhyve_host
     scm:
       - FreeBSD-src-head-empty
@@ -359,6 +378,7 @@
 
 - job:
     name: FreeBSD-head-amd64-test_dtrace
+    disabled: true
     node: bhyve_host
     scm:
       - FreeBSD-src-head-empty
@@ -388,6 +408,7 @@
 
 - job:
     name: FreeBSD-head-amd64-test_zfs
+    disabled: true
     node: bhyve_host
     scm:
       - FreeBSD-src-head-empty

@@ -1,5 +1,6 @@
 - job:
     name: FreeBSD-doc-head
+    disabled: true
     defaults: global
     node: jailer
     scm:
@@ -30,6 +31,7 @@
 
 - job:
     name: FreeBSD-doc-head-igor
+    disabled: true
     defaults: global
     node: jailer
     scm:
