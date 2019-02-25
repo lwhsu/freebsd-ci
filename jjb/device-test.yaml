@@ -1,0 +1,104 @@
+- project:
+    name: FreeBSD-device-pinea64
+      - pinea64
+    target_arch:
+      - aarch64
+    branch:
+      - head
+#     - stable-12
+#     - stable-11
+#     - releng-11_2
+    jobs:
+      - 'FreeBSD-device-{branch}-{device_name}-ci':
+          target: arm64
+          warnscanner: clang
+- project:
+    name: FreeBSD-device-beagleboneBLK
+    device_name:
+      - beaglebone
+    target_arch:
+      - aarch64
+    branch:
+      - head
+#     - stable-12
+#     - stable-11
+#     - releng-11_2
+    jobs:
+      - 'FreeBSD-device-{branch}-{device_name}-ci':
+          target: arm64
+          warnscanner: clang
+
+- job-group:
+    name: 'FreeBSD-device-{branch}-{device_name}-ci'
+    jobs:
+       - 'FreeBSD-{branch}-{target_arch}-ci'
+       - 'FreeBSD-device-{branch}-{device_name}-test'
+
+- job-template:
+    defaults: global
+#   disabled: true
+    name: 'FreeBSD-device-{branch}-{device_name}-test'
+    node: master
+    scm:
+      - 'FreeBSD-src-{branch}'
+    triggers:
+      - pollscm:
+          cron: "H/5 * * * *"
+    parameters:
+      - string:
+          name: SVN_REVISION
+          description: "Subversion revision"
+    properties:
+      - inject:
+          properties-content: |
+            FBSD_BRANCH={branch}
+            FBSD_TARGET={target}
+            FBSD_TARGET_ARCH={target_arch}
+            LINK_TYPE=latest_tested
+    builders:
+      - add-svn-revision-description
+      - checkout-scripts
+      - execute-job-build-script
+#     - setup-jail
+#     - execute-in-jail
+    publishers:
+#     - make-symlink # Posts symlink to artifact size
+      - publish-junit-results
+#     - scan-clang-warnings
+#     - clean-jail
+#     - mail-notify-failure
+#     - mail-notify-fixed
+    wrappers:
+      - timestamps
+      - timeout:
+          timeout: 90
+          timeout-var: 'BUILD_TIMEOUT'
+          fail: true
+          type: absolute
+
+- job:
+    name: FreeBSD-device-tests
+    defaults: global
+    node: master
+    scm:
+      - FreeBSD-src-head
+    parameters:
+      - string:
+          name: SVN_REVISION
+          description: "Subversion revision"
+    properties:
+      - inject
+    builders:
+      - add-svn-revision-description
+      - checkout-scripts
+#     - setup-jail
+#     - execute-in-jail
+    publishers:
+      - publish-checkstyle-results
+#     - clean-jail
+    wrappers:
+      - timestamps
+      - timeout:
+          timeout: 30
+          timeout-var: 'BUILD_TIMEOUT'
+          fail: true

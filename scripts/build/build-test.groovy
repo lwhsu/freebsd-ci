@@ -52,7 +52,7 @@ import groovy.json.JsonBuilder
 import java.net.URL
 
 String src_url = 'svn://svnmir.freebsd.org/base/head'
-String script_url = 'https://github.com/freebsd/freebsd-ci.git'
+String script_url = 'https://github.com/GeraldNDA/freebsd-ci.git'
 String make_conf_file = MAKE_CONF_FILE
 String workspace
 String json_str
