@@ -1,5 +1,6 @@
 - project:
     name: FreeBSD-device-pinea64
+    device_name:
       - pinea64
     target_arch:
       - aarch64
