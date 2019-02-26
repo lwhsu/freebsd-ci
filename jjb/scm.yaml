@@ -9,6 +9,15 @@
           viewvc-url: https://svnweb.FreeBSD.org/base/
 
 - scm:
+    name: FreeBSD-src-head-git
+    scm:
+      - git:
+          url: https://github.com/freebsd/freebsd.git
+          branches:
+           - master
+          browser: auto
+
+- scm:
     name: FreeBSD-src-head-empty
     scm:
       - svn:
