@@ -42,7 +42,7 @@ if [ "${WITH_32BIT}" -eq 1 ]; then
 	fetch -m ${BASE_URL}/lib32.txz
 fi
 
-sudo zfs create ${ZFS_PARENT}/${JNAME}
+sudo mkdir -p ${ZFS_PARENT}/${JNAME}
 
 sudo tar Jxf base.txz -C ${JPATH}
 if [ "${WITH_32BIT}" -eq 1 ]; then
@@ -64,7 +64,13 @@ if [ -n "${MOUNT_REPO}" ]; then
 	sudo mount -t nullfs ${WORKSPACE}/${MOUNT_REPO} ${JPATH}/usr/${MOUNT_REPO}
 fi
 
-printf "${BUILDER_RESOLV_CONF}" | sudo tee ${JPATH}/etc/resolv.conf
+echo "Configuring DNS ..."
+if [ -n "${BUILDER_RESOLV_CONF}" ]; then
+	printf "${BUILDER_RESOLV_CONF}" | sudo tee ${JPATH}/etc/resolv.conf
+else
+	cat /etc/resolv.conf | sudo tee ${JPATH}/etc/resolv.conf
+fi
+echo "done."
 
 if [ "${BUILDER_NETIF}" -a "${BUILDER_JAIL_IP6}" ]; then
 	sudo ifconfig ${BUILDER_NETIF} inet6 ${BUILDER_JAIL_IP6} alias
@@ -83,18 +89,28 @@ sudo jail -c persist \
 	name="${JNAME}" \
 	path="${JPATH}" \
 	osrelease="${OSRELEASE}" \
-	host.hostname="${JNAME}.jail.ci.FreeBSD.org" \
+	host.hostname="${JNAME}.jail" \
 	${JAIL_ARG_IP6} \
 	${JAIL_ARG_IP4} \
 	allow.chflags
 
 echo "setup build environment"
-
+echo -n "Configuring pkg ..."
 sudo jexec ${JNAME} sh -c "sed -i.bak -e 's,pkg+http://pkg.FreeBSD.org/\${ABI}/quarterly,pkg+http://pkg.FreeBSD.org/\${ABI}/latest,' /etc/pkg/FreeBSD.conf"
-sudo jexec ${JNAME} sh -c "env ASSUME_ALWAYS_YES=yes pkg update"
-sudo jexec ${JNAME} sh -c "env pkg install -y `cat freebsd-ci/scripts/jail/default-pkg-list | paste -d ' ' -s -`"
+echo "done."
+
+echo -n "Setting up pkg ..."
+sudo jexec ${JNAME} sh -c "env ASSUME_ALWAYS_YES=yes pkg -r update"
+echo  "done."
+
+echo -n "Installing default pkg list ..."
+sudo jexec ${JNAME} sh -c "env pkg -d install -y `cat freebsd-ci/scripts/jail/default-pkg-list | paste -d ' ' -s -`"
+echo "done."
+
 if [ -s "freebsd-ci/jobs/${JOB_NAME}/pkg-list" ]; then
-	sudo jexec ${JNAME} sh -c "pkg install -y `cat freebsd-ci/jobs/${JOB_NAME}/pkg-list | paste -d ' ' -s -`"
+	echo "Installing job specific pkg list ... "
+	sudo jexec ${JNAME} sh -c "pkg -d install -y `cat freebsd-ci/jobs/${JOB_NAME}/pkg-list | paste -d ' ' -s -`"
+	echo -n "done."
 fi
 
 # remove network for quarantine env

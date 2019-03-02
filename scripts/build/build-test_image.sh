@@ -9,7 +9,7 @@ if [ -z "${SVN_REVISION}" ]; then
 	exit 1
 fi
 
-ARTIFACT_SERVER=${ARTIFACT_SERVER:-https://artifact.ci.freebsd.org}
+ARTIFACT_SERVER=${ARTIFACT_SERVER:-file:///jenkins/artifact/snapshot}
 ARTIFACT_SUBDIR=snapshot/${FBSD_BRANCH}/r${SVN_REVISION}/${TARGET}/${TARGET_ARCH}
 CONFIG_BASE=`dirname $0 | xargs realpath`/config
 OUTPUT_IMG_NAME=disk-test.img

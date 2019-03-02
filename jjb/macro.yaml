@@ -1,9 +1,17 @@
+#- builder:
+#    name: checkout-scripts
+#    builders:
+#      - shell: |
+#          rm -fr freebsd-ci
+#          git clone --depth=1 --single-branch -b master https://github.com/GeraldNDA/freebsd-ci.git
+
 - builder:
+#   name: checkout-scripts-local
     name: checkout-scripts
     builders:
       - shell: |
           rm -fr freebsd-ci
-          git clone --depth=1 --single-branch -b master https://github.com/GeraldNDA/freebsd-ci.git
+          cp -R /home/gerald/jenkins-setup/freebsd-ci .
 
 - builder:
     name: execute-job-build-script
@@ -63,6 +71,28 @@
               credential-id: artifact-credential
               username: ARTIFACT_CRED_USER
               password: ARTIFACT_CRED_PASS
+
+- publisher:
+    name: link-artifacts
+    publishers:
+      - postbuildscript:
+          mark-unstable-if-failed: true
+          builders:
+            - build-on:
+                - SUCCESS
+              build-steps:
+                - shell: ./freebsd-ci/artifact/link-artifacts.py
+
+- publisher:
+    name: move-artifacts
+    publishers:
+      - postbuildscript:
+          mark-unstable-if-failed: true
+          builders:
+            - build-on:
+                - SUCCESS
+              build-steps:
+                - shell: ./freebsd-ci/artifact/copy-artifacts.py
 
 - publisher:
     name: make-symlink

@@ -1,3 +1,11 @@
+- job-group:
+    name: 'FreeBSD-{branch}-aarch64-device_tests'
+    device_name:
+      - pinea64
+      - beaglebone
+    jobs:
+      - 'FreeBSD-device-{device_name}'
+
 - project:
     name: FreeBSD-device-pinea64
     device_name:
@@ -13,8 +21,9 @@
       - 'FreeBSD-device-{branch}-{device_name}-ci':
           target: arm64
           warnscanner: clang
+
 - project:
-    name: FreeBSD-device-beagleboneBLK
+    name: FreeBSD-device-beaglebone
     device_name:
       - beaglebone
     target_arch:
@@ -42,9 +51,10 @@
     node: master
     scm:
       - 'FreeBSD-src-{branch}'
-    triggers:
-      - pollscm:
-          cron: "H/5 * * * *"
+#    triggers:
+#      - reverse:
+#          jobs: 'FreeBSD-{branch}-{target_arch}-ci'
+#          result: 'success'
     parameters:
       - string: # Not needed if git is being used.
           name: SVN_REVISION
@@ -76,30 +86,4 @@
           timeout-var: 'BUILD_TIMEOUT'
           fail: true
           type: absolute
-
-- job:
-    name: FreeBSD-device-tests
-    defaults: global
-    node: master
-    scm:
-      - FreeBSD-src-head
-    parameters:
-      - string:
-          name: SVN_REVISION
-          description: "Subversion revision"
-    properties:
-      - inject
-    builders:
-      - add-svn-revision-description
-      - checkout-scripts
-#     - setup-jail
-#     - execute-in-jail
-    publishers:
-      - publish-checkstyle-results
-#     - clean-jail
-    wrappers:
-      - timestamps
-      - timeout:
-          timeout: 30
-          timeout-var: 'BUILD_TIMEOUT'
-          fail: true
+ 

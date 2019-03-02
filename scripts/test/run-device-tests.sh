@@ -4,10 +4,12 @@ SSL_CA_CERT_FILE=/usr/local/share/certs/ca-root-nss.crt
 
 if [ -z "${SVN_REVISION}" ]; then
 	echo "No subversion revision specified"
+	echo "Current environment:"
+	env
 	exit 1
 fi
 
-ARTIFACT_SERVER=${ARTIFACT_SERVER:-https://artifact.ci.freebsd.org}
+ARTIFACT_SERVER=${ARTIFACT_SERVER:-file:///jenkins/artifacts/snapshot}
 ARTIFACT_SUBDIR=snapshot/${FBSD_BRANCH}/r${SVN_REVISION}/${TARGET}/${TARGET_ARCH}
 IMG_NAME=disk-test.img
 JOB_DIR=freebsd-ci/jobs/${JOB_NAME}
@@ -32,8 +34,15 @@ xz -fd ${IMG_NAME}.xz
 
 # Probably still want to download an image (if possible)
 # But then should load this image into the dhcp root directory and begin booting process
+# Copy boot image into root directory
+sudo /usr/bin/cp ${IMAGE_NAME} ${NFSROOTDIR}/
 # 1) Power cycle device (using power scripts)
+devserialctl start ${DEVICE_NAME} -o ${LOG_FILE}
+devpowerctl ${DEVICE_NAME} restart
 # 2) Use serial port to check if device is running as expected
+# Wait some time and then check if the last line is either an error line or login
+
+
 # 3) Power off device and view logs
 
 for i in `jot ${EXTRA_DISK_NUM}`; do

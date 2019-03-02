@@ -1,8 +1,8 @@
 - job-template:
     artifact_path: src/release/artifact
     defaults: global
-    disabled: true
-    node_job_build: jailer_fast
+    disabled: '{disable_build}'
+    node_job_build: jailer
     name: 'FreeBSD-{branch}-{target_arch}-build'
     node: '{node_job_build}'
     scm:
@@ -16,28 +16,26 @@
             FBSD_BRANCH={branch}
             FBSD_TARGET={target}
             FBSD_TARGET_ARCH={target_arch}
+            ARTIFACT_PATH={artifact_path}
             LINK_TYPE=latest
             MOUNT_REPO=src
     builders:
       - add-svn-revision-description
       - checkout-scripts
+#      - setup-env
+#      - execute-in-env
       - setup-jail
       - execute-in-jail
     publishers:
       - scan-{warnscanner}-warnings
-      - ftp:
-          site: 'artifact.ci.freebsd.org'
-          target: 'snapshot'
-          source: '{artifact_path}/**'
-          remove-prefix: '{artifact_path}'
-          retries: 3
-          retry-delay: 10000
-      - make-symlink
+      - move-artifacts
+      - link-artifacts
       - clean-jail
       - mail-notify-failure
       - mail-notify-fixed
       - trigger-parameterized-builds:
         - project:
+            - 'FreeBSD-{branch}-{target_arch}-device_tests'
             - 'FreeBSD-{branch}-{target_arch}-images'
             - 'FreeBSD-{branch}-{target_arch}-testvm'
             - 'FreeBSD-{branch}-{target_arch}-LINT'
@@ -53,7 +51,7 @@
           timeout-var: 'BUILD_TIMEOUT'
           fail: true
           type: absolute
-      - bind-artifact-credential
+#     - bind-artifact-credential
 
 - job-template:
     disable_job_LINT: true
@@ -95,7 +93,7 @@
     defaults: global
     name: 'FreeBSD-{branch}-{target_arch}-images'
     disabled: '{disable_job_images}'
-    node: jailer
+    node: master
     scm:
       - 'FreeBSD-src-{branch}-empty'
     parameters:
@@ -108,22 +106,17 @@
             FBSD_BRANCH={branch}
             FBSD_TARGET={target}
             FBSD_TARGET_ARCH={target_arch}
+            ARTIFACT_PATH={artifact_path}
             LINK_TYPE=latest_vm
     builders:
       - add-svn-revision-description
       - checkout-scripts
-      - setup-jail
-      - execute-in-jail
+#     - setup-jail
+#     - execute-in-jail
     publishers:
-      - ftp:
-          site: 'artifact.ci.freebsd.org'
-          target: 'snapshot'
-          source: '{artifact_path}/**'
-          remove-prefix: '{artifact_path}'
-          retries: 3
-          retry-delay: 10000
+      - move-artifacts
       - make-symlink
-      - clean-jail
+#     - clean-jail
     wrappers:
       - timestamps
       - timeout:
@@ -131,13 +124,13 @@
           timeout-var: 'BUILD_TIMEOUT'
           fail: true
           type: absolute
-      - bind-artifact-credential
+#     - bind-artifact-credential
 
 - job-template:
     artifact_path: artifact
     defaults: global
     name: 'FreeBSD-{branch}-{target_arch}-testvm'
-    disabled: true
+    disabled: '{disable_build}'
     node: jailer_fast
     scm:
       - 'FreeBSD-src-{branch}-empty'
@@ -181,7 +174,7 @@
 - job-template:
     artifact_path: artifact
     defaults: global
-    disabled: true
+    disabled: '{disable_build}'
     name: 'FreeBSD-{branch}-riscv64-testvm'
     node: jailer
     scm:
@@ -225,7 +218,7 @@
 - job-template:
     defaults: global
     name: 'FreeBSD-{branch}-{target_arch}-test'
-    disabled: true
+    disabled: '{disable_build}'
     node: bhyve_host
     scm:
       - 'FreeBSD-src-{branch}-empty'
@@ -262,7 +255,7 @@
 - job-template:
     defaults: global
     name: 'FreeBSD-head-amd64-test'
-    disabled: true
+    disabled: '{disable_build}'
     node: bhyve_host
     scm:
       - 'FreeBSD-src-head-empty'
@@ -299,7 +292,7 @@
 - job-template:
     defaults: global
     name: 'FreeBSD-{branch}-riscv64-test'
-    disabled: true
+    disabled: '{disable_build}'
     node: jailer
     scm:
       - 'FreeBSD-src-{branch}-empty'
@@ -419,7 +412,7 @@
     defaults: global
     node_job_build: jailer_fast
     name: 'FreeBSD-srcproj-{project}-{target_arch}-build'
-    disabled: true
+    disabled: '{disable_build}'
     node: '{node_job_build}'
     scm:
       - 'FreeBSD-src-project'
@@ -473,7 +466,7 @@
     artifact_path: artifact
     defaults: global
     name: 'FreeBSD-srcproj-{project}-{target_arch}-basevm'
-    disabled: true
+    disabled: '{disable_build}'
     node: jailer_fast
     scm:
       - 'FreeBSD-src-project-empty'
@@ -518,7 +511,7 @@
     artifact_path: artifact
     defaults: global
     name: 'FreeBSD-srcproj-{project}-{target_arch}-pkgs'
-    disabled: true
+    disabled: '{disable_build}'
     node: bhyve_host
     scm:
       - 'FreeBSD-src-project-empty'
@@ -561,7 +554,7 @@
     artifact_path: artifact
     defaults: global
     name: 'FreeBSD-srcproj-{project}-{target_arch}-testvm'
-    disabled: true
+    disabled: '{disable_build}'
     node: jailer_fast
     scm:
       - 'FreeBSD-src-project-empty'
@@ -606,7 +599,7 @@
 - job-template:
     defaults: global
     name: 'FreeBSD-srcproj-{project}-{target_arch}-test'
-    disabled: true
+    disabled: '{disable_build}'
     node: bhyve_host
     scm:
       - 'FreeBSD-src-project-empty'

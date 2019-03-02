@@ -1,6 +1,6 @@
 - project:
     name: FreeBSD-amd64
-    disabled: true
+    disable_build: true
     target_arch:
       - amd64
     branch:
@@ -15,7 +15,7 @@
 
 - project:
     name: FreeBSD-head-amd64
-    disabled: true
+    disable_build: true
     target_arch:
       - amd64
     branch:
@@ -27,14 +27,14 @@
 
 - project:
     name: FreeBSD-aarch64
-    disabled: true
+    disable_build: false
     target_arch:
       - aarch64
     branch:
       - head
-      - stable-12
-      - stable-11
-      - releng-11_2
+#     - stable-12
+#     - stable-11
+#     - releng-11_2
     jobs:
       - 'FreeBSD-{branch}-aarch64-ci':
           target: arm64
@@ -42,7 +42,7 @@
 
 - project:
     name: FreeBSD-armv6
-    disabled: true
+    disable_build: true
     target_arch:
       - armv6
     branch:
@@ -57,7 +57,7 @@
 
 - project:
     name: FreeBSD-armv7
-    disabled: true
+    disable_build: true
     target_arch:
       - armv7
     branch:
@@ -70,7 +70,7 @@
 
 - project:
     name: FreeBSD-i386
-    disabled: true
+    disable_build: true
     target_arch:
       - i386
     branch:
@@ -86,7 +86,7 @@
 
 - project:
     name: FreeBSD-mips
-    disabled: true
+    disable_build: true
     target_arch:
       - mips
     branch:
@@ -100,7 +100,7 @@
 
 - project:
     name: FreeBSD-mips64
-    disabled: true
+    disable_build: true
     target_arch:
       - mips64
     branch:
@@ -114,7 +114,7 @@
 
 - project:
     name: FreeBSD-powerpc
-    disabled: true
+    disable_build: true
     target_arch:
       - powerpc
     branch:
@@ -129,7 +129,7 @@
 
 - project:
     name: FreeBSD-powerpc64
-    disabled: true
+    disable_build: true
     target_arch:
       - powerpc64
     branch:
@@ -144,7 +144,7 @@
 
 - project:
     name: FreeBSD-powerpcspe
-    disabled: true
+    disable_build: true
     target_arch:
       - powerpcspe
     branch:
@@ -157,7 +157,7 @@
 
 - project:
     name: FreeBSD-riscv64
-    disabled: true
+    disable_build: true
     target_arch:
       - riscv64
     branch:
@@ -173,7 +173,7 @@
 
 - project:
     name: FreeBSD-sparc64
-    disabled: true
+    disable_build: true
     target_arch:
       - sparc64
     branch:
@@ -189,7 +189,7 @@
 
 - project:
     name: FreeBSD-srcproj
-    disabled: true
+    disable_build: true
     target_arch:
       - aarch64
       - amd64
