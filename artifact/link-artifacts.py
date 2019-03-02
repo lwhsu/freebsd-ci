@@ -14,8 +14,8 @@ TARGET_ARCH = os.environ['FBSD_TARGET_ARCH']
 LINK_TYPE = os.environ['LINK_TYPE']
 
 def link_artifact_dir():
-    artifact_dir = JENKINS_ARTIFACT_DIR/BRANCH/REVISION/TARGET/TARGET_ARCH
-    link_dir = JENKINS_ARTIFACT_DIR/BRANCH/LINK_TYPE/TARGET/TARGET_ARCH
+    artifact_dir = JENKINS_ARTIFACT_BASEDIR/BRANCH/REVISION/TARGET/TARGET_ARCH
+    link_dir = JENKINS_ARTIFACT_BASEDIR/BRANCH/LINK_TYPE/TARGET/TARGET_ARCH
     
     artifact_dir.mkdir(parents=True, exist_ok=True)
     try:
