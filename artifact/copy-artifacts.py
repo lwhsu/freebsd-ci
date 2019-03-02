@@ -15,7 +15,8 @@ def load_from_environ():
     ARTIFACT_PATH = os.environ["ARTIFACT_PATH"]
 
 def copy_artifacts():
-    copy_tree(Path(f"{WORKSPACE}/{ARTIFACT_PATH}"), JENKINS_ARTIFACT_BASEDIR)
+    workspace_artifacts = Path(f"{WORKSPACE}/{ARTIFACT_PATH}")
+    copy_tree(str(workspace_artifacts), str(JENKINS_ARTIFACT_BASEDIR))
 
 if __name__ == "__main__":
     load_from_environ()
