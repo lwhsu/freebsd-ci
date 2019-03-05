@@ -92,7 +92,7 @@
             - build-on:
                 - SUCCESS
               build-steps:
-                - shell: ./freebsd-ci/artifact/copy-artifacts.py
+                - shell: ./freebsd-ci/artifact/move-artifacts.sh
 
 - publisher:
     name: make-symlink
