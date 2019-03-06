@@ -1,64 +1,66 @@
-- job-group:
-    name: 'FreeBSD-{branch}-aarch64-device_tests'
-    device_name:
-      - pinea64
-      - beaglebone
-    jobs:
-      - 'FreeBSD-device-{device_name}'
-
-- project:
-    name: FreeBSD-device-pinea64
-    device_name:
-      - pinea64
-    target_arch:
-      - aarch64
-    branch:
-      - head
-#     - stable-12
-#     - stable-11
-#     - releng-11_2
-    jobs:
-      - 'FreeBSD-device-{branch}-{device_name}-ci':
-          target: arm64
-          warnscanner: clang
-
-- project:
-    name: FreeBSD-device-beaglebone
-    device_name:
-      - beaglebone
-    target_arch:
-      - aarch64
-    branch:
-      - head
-#     - stable-12
-#     - stable-11
-#     - releng-11_2
-    jobs:
-      - 'FreeBSD-device-{branch}-{device_name}-ci':
-          target: arm64
-          warnscanner: clang
-
-- job-group:
-    name: 'FreeBSD-device-{branch}-{device_name}-ci'
-    jobs:
-       - 'FreeBSD-{branch}-{target_arch}-ci'
-       - 'FreeBSD-device-{branch}-{device_name}-test'
-
 - job-template:
+    artifact_path: src/release/artifact
     defaults: global
-#   disabled: true
-    name: 'FreeBSD-device-{branch}-{device_name}-test'
-    node: master
+    disabled: '{disable_build}'
+    node_job_build: jailer
+    name: 'FreeBSD-{branch}-{target_arch}-build_devtest'
+    node: '{node_job_build}'
     scm:
       - 'FreeBSD-src-{branch}'
-#    triggers:
-#      - reverse:
-#          jobs: 'FreeBSD-{branch}-{target_arch}-ci'
-#          result: 'success'
-    parameters:
-      - string: # Not needed if git is being used.
-          name: SVN_REVISION
-          description: "Subversion revision"
+    triggers:
+      - pollscm:
+          cron: "H/5 * * * *"
+    properties:
+      - inject:
+          properties-content: |
+            FBSD_BRANCH={branch}
+            FBSD_TARGET={target}
+            FBSD_TARGET_ARCH={target_arch}
+            ARTIFACT_PATH={artifact_path}
+            LINK_TYPE=latest
+            MOUNT_REPO=src
+    builders:
+      - add-svn-revision-description
+      - checkout-scripts
+      - setup-jail
+      - execute-in-jail
+    publishers:
+      - scan-{warnscanner}-warnings
+      - move-artifacts
+      - link-artifacts
+      - clean-jail
+      - mail-notify-failure
+      - mail-notify-fixed
+    # - trigger-parameterized-builds:
+    #    - project:
+    #        - 'FreeBSD-{branch}-{device_name}-test':
+    #      condition: SUCCESS
+    #      svn-revision: true
+    #      property-file: trigger.property
+    wrappers:
+      - timestamps
+      - timeout:
+          timeout: 90
+          timeout-var: 'BUILD_TIMEOUT'
+          fail: true
+          type: absolute
+
+- job-template:
+    artifact_path: src/release/artifact
+    defaults: global
+    disabled: '{disable_build}'
+    name: 'FreeBSD-device-{branch}-{device_name}-test'
+    node: jailer
+    scm:
+      - 'FreeBSD-src-{branch}-empty'
+    triggers:
+      - reverse:
+          jobs: 'FreeBSD-{branch}-{target_arch}-build_devtest'
+          result: 'success'
+#   parameters:
+#     - string: # Not needed if git is being used.
+#         name: SVN_REVISION
+#         description: "Subversion revision"
     properties:
       - inject:
           properties-content: |
@@ -69,14 +71,13 @@
     builders:
       - add-svn-revision-description
       - checkout-scripts
-      - execute-job-build-script
-#     - setup-jail
-#     - execute-in-jail
-    publishers: []
+      - setup-jail
+      - execute-in-jail
+    publishers:
 #     - make-symlink # Posts symlink to artifact size
 #     - publish-junit-results # TODO:find and update these if relevant
 #     - scan-clang-warnings
-#     - clean-jail
+      - clean-jail
 #     - mail-notify-failure
 #     - mail-notify-fixed
     wrappers:
@@ -86,4 +87,25 @@
           timeout-var: 'BUILD_TIMEOUT'
           fail: true
           type: absolute
- 
+
+- project:
+    name: FreeBSD-device-tests
+    disable_build: false
+    branch:
+      - head
+    jobs:
+      - 'FreeBSD-{branch}-aarch64-device_tests':
+          target: arm64
+          target_arch: aarch64
+          warnscanner: clang
+          device_name:
+            - pinea64
+            - beaglebone
+
+- job-group:
+    name: 'FreeBSD-{branch}-aarch64-device_tests'
+    jobs:
+      - 'FreeBSD-{branch}-{target_arch}-build_devtest'
+      - 'FreeBSD-device-{branch}-{device_name}-test'
+
+

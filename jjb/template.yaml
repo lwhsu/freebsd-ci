@@ -35,7 +35,6 @@
       - mail-notify-fixed
       - trigger-parameterized-builds:
         - project:
-            - 'FreeBSD-{branch}-{target_arch}-device_tests'
             - 'FreeBSD-{branch}-{target_arch}-images'
             - 'FreeBSD-{branch}-{target_arch}-testvm'
             - 'FreeBSD-{branch}-{target_arch}-LINT'

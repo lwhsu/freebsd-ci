@@ -27,7 +27,7 @@
 
 - project:
     name: FreeBSD-aarch64
-    disable_build: false
+    disable_build: true
     target_arch:
       - aarch64
     branch:
