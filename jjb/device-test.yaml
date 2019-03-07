@@ -19,6 +19,8 @@
             ARTIFACT_PATH={artifact_path}
             LINK_TYPE=latest
             MOUNT_REPO=src
+      - copyartifact:
+          projects: 'FreeBSD-device-{branch}-*-test'
     builders:
       - add-svn-revision-description
       - checkout-scripts
@@ -26,8 +28,13 @@
       - execute-in-jail
     publishers:
       - scan-{warnscanner}-warnings
-      - move-artifacts
-      - link-artifacts
+#     - move-artifacts
+#     - link-artifacts
+      - archive:
+          artifacts: '{artifact_path}/**'
+          only-if-success: true
+          fingerprint: true
+          latest-only: true
       - clean-jail
       - mail-notify-failure
       - mail-notify-fixed
@@ -50,9 +57,9 @@
     defaults: global
     disabled: '{disable_build}'
     name: 'FreeBSD-device-{branch}-{device_name}-test'
-    node: jailer
-    scm:
-      - 'FreeBSD-src-{branch}-empty'
+    node: master
+#   scm:
+#     - 'FreeBSD-src-{branch}-empty'
     triggers:
       - reverse:
           jobs: 'FreeBSD-{branch}-{target_arch}-build_devtest'
@@ -69,15 +76,21 @@
             FBSD_TARGET_ARCH={target_arch}
             LINK_TYPE=latest_tested
     builders:
-      - add-svn-revision-description
-      - checkout-scripts
-      - setup-jail
-      - execute-in-jail
-    publishers:
+#     - add-svn-revision-description
+#     - checkout-scripts
+#     - setup-jail
+      - copyartifact:
+          project: 'FreeBSD-{branch}-{target_arch}-build_devtest'
+          which-build: last-successful
+          target: '{artifact_path}'
+          stable: false
+      - execute-job-build-script
+#     - execute-in-jail
+    publishers: []
 #     - make-symlink # Posts symlink to artifact size
 #     - publish-junit-results # TODO:find and update these if relevant
 #     - scan-clang-warnings
-      - clean-jail
+#     - clean-jail
 #     - mail-notify-failure
 #     - mail-notify-fixed
     wrappers:
