@@ -3,7 +3,7 @@
 _JENKINS_ARTIFACT_BASEDIR=/jenkins/artifact/snapshot
 
 mv_artifacts () {
-	mv "${ARTIFACT_PATH}" "${_JENKINS_ARTIFACT_BASEDIR}"
+	cp -R ${ARTIFACT_PATH}/ ${_JENKINS_ARTIFACT_BASEDIR}
 }
 
 mv_artifacts
