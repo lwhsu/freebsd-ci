@@ -1,43 +1,18 @@
 #!/bin/sh
 
-SSL_CA_CERT_FILE=/usr/local/share/certs/ca-root-nss.crt
-
-if [ -z "${SVN_REVISION}" ]; then
-	echo "No subversion revision specified"
-	echo "Current environment:"
-	env
-	exit 1
-fi
-
-ARTIFACT_SERVER=${ARTIFACT_SERVER:-file:///jenkins/artifacts/snapshot}
-ARTIFACT_SUBDIR=snapshot/${FBSD_BRANCH}/r${SVN_REVISION}/${TARGET}/${TARGET_ARCH}
-IMG_NAME=disk-test.img
 JOB_DIR=freebsd-ci/jobs/${JOB_NAME}
-TEST_BASE=`dirname $0`
 
 TIMEOUT_MS=${BUILD_TIMEOUT:-5400000}
 TIMEOUT=$((${TIMEOUT_MS} / 1000))
 TIMEOUT_EXPECT=$((${TIMEOUT} - 60))
-TIMEOUT_VM=$((${TIMEOUT_EXPECT} - 120))
-
-VM_CPU_COUNT=2
-VM_MEM_SIZE=4096m
-
-EXTRA_DISK_NUM=5
-BHYVE_EXTRA_DISK_PARAM=""
 
 METADIR=meta
 METAOUTDIR=meta-out
+# Flow
+# 0) Open serial connection with device
+# TODO: Write serial controlling scripts
 
-fetch ${ARTIFACT_SERVER}/${ARTIFACT_SUBDIR}/${IMG_NAME}.xz
-xz -fd ${IMG_NAME}.xz
-
-# Probably still want to download an image (if possible)
-# But then should load this image into the dhcp root directory and begin booting process
-# Copy boot image into root directory
-sudo /usr/bin/cp ${IMAGE_NAME} ${NFSROOTDIR}/
 # 1) Power cycle device (using power scripts)
-devserialctl start ${DEVICE_NAME} -o ${LOG_FILE}
 devpowerctl ${DEVICE_NAME} restart
 # 2) Use serial port to check if device is running as expected
 # Wait some time and then check if the last line is either an error line or login
@@ -86,7 +61,4 @@ sh -ex ${TEST_BASE}/extract-meta.sh
 rm -f test-report.*
 mv ${METAOUTDIR}/test-report.* .
 
-for i in `jot ${EXTRA_DISK_NUM}`; do
-	rm -f disk${i}
-done
 rm -f ${IMG_NAME}
