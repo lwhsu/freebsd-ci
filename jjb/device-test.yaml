@@ -74,14 +74,16 @@
             FBSD_BRANCH={branch}
             FBSD_TARGET={target}
             FBSD_TARGET_ARCH={target_arch}
+            ARTIFACT_PATH={artifact_path}
             LINK_TYPE=latest_tested
     builders:
 #     - add-svn-revision-description
-#     - checkout-scripts
+      - checkout-scripts
 #     - setup-jail
       - copyartifact:
           project: 'FreeBSD-{branch}-{target_arch}-build_devtest'
           which-build: last-successful
+          flatten: true
           target: '{artifact_path}'
           stable: false
       - execute-job-build-script
