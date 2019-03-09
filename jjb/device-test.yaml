@@ -28,8 +28,6 @@
       - execute-in-jail
     publishers:
       - scan-{warnscanner}-warnings
-#     - move-artifacts
-#     - link-artifacts
       - archive:
           artifacts: '{artifact_path}/**'
           only-if-success: true
@@ -58,16 +56,10 @@
     disabled: '{disable_build}'
     name: 'FreeBSD-device-{branch}-{device_name}-test'
     node: master
-#   scm:
-#     - 'FreeBSD-src-{branch}-empty'
     triggers:
       - reverse:
           jobs: 'FreeBSD-{branch}-{target_arch}-build_devtest'
           result: 'success'
-#   parameters:
-#     - string: # Not needed if git is being used.
-#         name: SVN_REVISION
-#         description: "Subversion revision"
     properties:
       - inject:
           properties-content: |
@@ -89,9 +81,6 @@
       - execute-job-build-script
 #     - execute-in-jail
     publishers: []
-#     - make-symlink # Posts symlink to artifact size
-#     - publish-junit-results # TODO:find and update these if relevant
-#     - scan-clang-warnings
 #     - clean-jail
 #     - mail-notify-failure
 #     - mail-notify-fixed

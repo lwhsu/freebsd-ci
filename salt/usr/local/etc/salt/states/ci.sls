@@ -1,3 +1,0 @@
-sudo:
-  pkg:
-    - installed

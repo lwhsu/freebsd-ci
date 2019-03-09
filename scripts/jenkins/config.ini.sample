@@ -1,6 +1,0 @@
-[general]
-host = https://ci.example.org
-
-[cred]
-username = <user>
-password = <api token>

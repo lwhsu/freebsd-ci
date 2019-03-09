@@ -1,17 +1,16 @@
-#- builder:
-#    name: checkout-scripts
-#    builders:
-#      - shell: |
-#          rm -fr freebsd-ci
-#          git clone --depth=1 --single-branch -b master https://github.com/GeraldNDA/freebsd-ci.git
-
 - builder:
-#   name: checkout-scripts-local
     name: checkout-scripts
     builders:
       - shell: |
           rm -fr freebsd-ci
-          cp -R /home/gerald/jenkins-setup/freebsd-ci .
+          git clone --depth=1 --single-branch -b master https://github.com/GeraldNDA/freebsd-ci.git
+
+- builder:
+    name: checkout-scripts-local
+    builders:
+      - shell: |
+          rm -fr freebsd-ci
+          cp -R ~/jenkins-setup/freebsd-ci .
 
 - builder:
     name: execute-job-build-script
@@ -47,60 +46,6 @@
             - GNU Make + GNU C Compiler (gcc)
 
 - publisher:
-    name: publish-junit-results
-    publishers:
-      - junit:
-          results: test-report.xml
-
-- publisher:
-    name: publish-checkstyle-results
-    publishers:
-      - checkstyle:
-          pattern: checkstyle-result.xml
-
-- publisher:
     name: publish-clang-scan-build-results
     publishers:
       - scan-build
-
-- wrapper:
-    name: bind-artifact-credential
-    wrappers:
-      - credentials-binding:
-          - username-password-separated:
-              credential-id: artifact-credential
-              username: ARTIFACT_CRED_USER
-              password: ARTIFACT_CRED_PASS
-
-- publisher:
-    name: link-artifacts
-    publishers:
-      - postbuildscript:
-          mark-unstable-if-failed: true
-          builders:
-            - build-on:
-                - SUCCESS
-              build-steps:
-                - shell: ./freebsd-ci/artifact/link-artifacts.py
-
-- publisher:
-    name: move-artifacts
-    publishers:
-      - postbuildscript:
-          mark-unstable-if-failed: true
-          builders:
-            - build-on:
-                - SUCCESS
-              build-steps:
-                - shell: ./freebsd-ci/artifact/move-artifacts.sh
-
-- publisher:
-    name: make-symlink
-    publishers:
-      - postbuildscript:
-          mark-unstable-if-failed: true
-          builders:
-            - build-on:
-                - SUCCESS
-              build-steps:
-                - shell: ./freebsd-ci/artifact/post-link.py
