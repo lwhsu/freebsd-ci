@@ -1,6 +1,7 @@
-# FreeBSD Continuous Integration (CI)
+# FreeBSD Hardware Continuous Integration (CI) Setup
 
 This repository contains scripts and config files used
-for FreeBSD Continuous Integration by the jenkins-admin team.
+for FreeBSD Hardware Continuous Integration setup 
+by Gerald NDA based on the work done by the FreeBSD jenkins-admin team.
 
-See:  http://wiki.freebsd.org/Jenkins
+See:  http://wiki.freebsd.org/Jenkins for information on the base CI system.
