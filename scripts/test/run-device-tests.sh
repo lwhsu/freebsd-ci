@@ -16,6 +16,6 @@ set -e
 cd -
 
 echo "return code = $rc"
-devpowerctl ${DEVICE_NAME} poweroff
+devpowerctl turn_off ${DEVICE_NAME}
 
 exit $rc

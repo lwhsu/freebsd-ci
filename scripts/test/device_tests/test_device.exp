@@ -1,10 +1,13 @@
 #!/usr/local/bin/expect -f
-if { $argc  != 2 } {
-	puts stderr "Usage: $argv0 <device_name> <serial_port>"
-	exit 1
+# Use DEVICE env variable
+# error out if it doesn't exist
+if {[info exists env(DEVICE)]} {
+	set device $env(DEVICE)
+} 
+else {
+	puts stderr "Invalid Usage: `DEVICE` environment variable was not defined."	
 }
-set device [lindex $argv 0]
-set port [lindex $argv 1]
+
 # Use TIMEOUT env variable if exists
 # Timeout for booting device (commands)
 set boot_timeout 300
@@ -56,7 +59,8 @@ proc do_login {} {
 	}
 }
 
-spawn cu -l $port -s 115200
+# Assumes no one else is using it
+spawn console -f $device
 power_on $device
 
 # Verify that the serial port is opened successfully
