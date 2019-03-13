@@ -15,6 +15,7 @@ set -e
 cd -
 
 echo "return code = $rc"
-devpowerctl turn_off ${DEVICE}
-
+if [ $rc -ne 0 ]; then
+       	devpowerctl turn_off ${DEVICE}
+fi
 exit $rc

@@ -1,0 +1,12 @@
+#!/usr/local/bin/expect -f
+# Use DEVICE env variable
+# error out if it doesn't exist
+if {[info exists env(DEVICE)]} {
+	set device $env(DEVICE)
+} else {
+	puts stderr "Invalid Usage: `DEVICE` environment variable was not defined."	
+}
+set boot_timeout $env(TIMEOUT)
+# Log results to a file
+log_file -noappend $device.boot.log
+send_log "Skipped boot for $device."
