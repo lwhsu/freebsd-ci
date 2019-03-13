@@ -80,7 +80,10 @@
           stable: false
       - execute-job-build-script
 #     - execute-in-jail
-    publishers: []
+    publishers:
+      - archive:
+          artifacts: '**/*.log'
+          fingerprint: true
 #     - clean-jail
 #     - mail-notify-failure
 #     - mail-notify-fixed
