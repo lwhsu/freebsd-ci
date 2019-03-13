@@ -64,7 +64,12 @@ power_on $device
 
 # Verify that the serial port is opened successfully
 expect {
-	"Connected" {}
+	"console is down" {
+		send "c."
+		expect eof
+		handle_err "$device's serial connection is down."
+	}
+	-exact "\[connected\]" {}
 	# Either "all ports busy" (serial port is in use)
 	# or "link down" (serial port doesn't exist)
 	# occured.
