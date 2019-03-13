@@ -67,7 +67,7 @@ expect {
 	"console is down" {
 		send "c."
 		expect eof
-		handle_err "$device's serial connection is down."
+		handle_err $device "$device's serial connection is down."
 	}
 	-exact "\[connected\]" {}
 	# Either "all ports busy" (serial port is in use)
