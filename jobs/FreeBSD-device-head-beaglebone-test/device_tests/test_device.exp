@@ -5,8 +5,8 @@ if {[info exists env(DEVICE)]} {
 	set device $env(DEVICE)
 } else {
 	puts stderr "Invalid Usage: `DEVICE` environment variable was not defined."	
+	exit 1
 }
-set boot_timeout $env(TIMEOUT)
 # Log results to a file
 log_file -noappend $device.boot.log
 send_log "Skipped boot for $device."

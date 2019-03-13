@@ -4,10 +4,10 @@ DEFAULT_TESTS_DIR=freebsd-ci/scripts/test/device_tests
 TIMEOUT=300 # 5 minute timeout
 TESTS_DIR=${JOB_DIR}/device_tests
 cp -R ${DEFAULT_TESTS_DIR} .
-cd device_tests
 if [ -d ${TESTS_DIR} ]; then
 	cp -R ${TESTS_DIR}/ .
 fi
+cd device_tests
 set +e
 ./test_device.exp
 rc=$?

@@ -5,6 +5,7 @@ if {[info exists env(DEVICE)]} {
 	set device $env(DEVICE)
 } else {
 	puts stderr "Invalid Usage: `DEVICE` environment variable was not defined."	
+	exit 1
 }
 
 # Use TIMEOUT env variable if exists
