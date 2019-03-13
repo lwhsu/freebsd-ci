@@ -3,8 +3,7 @@
 # error out if it doesn't exist
 if {[info exists env(DEVICE)]} {
 	set device $env(DEVICE)
-} 
-else {
+} else {
 	puts stderr "Invalid Usage: `DEVICE` environment variable was not defined."	
 }
 
