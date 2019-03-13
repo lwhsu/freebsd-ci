@@ -52,7 +52,7 @@ proc do_login {} {
 		send "poweroff\r"
 		# Exit prompt when poweroff complete
 		expect -re {Uptime: (?:\d+m)?\d+s} {
-			send "\r~.\r"
+			send "c."
 			expect eof
 		}
 	}
