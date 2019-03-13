@@ -82,7 +82,7 @@
 #     - execute-in-jail
     publishers:
       - archive:
-          artifacts: '**/*.log'
+          artifacts: '**/*.boot.log'
           fingerprint: true
 #     - clean-jail
 #     - mail-notify-failure
