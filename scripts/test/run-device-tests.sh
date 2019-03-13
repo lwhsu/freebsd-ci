@@ -5,7 +5,7 @@ TIMEOUT=300 # 5 minute timeout
 TESTS_DIR=${JOB_DIR}/device_tests
 cp -R ${DEFAULT_TESTS_DIR} .
 if [ -d ${TESTS_DIR} ]; then
-	cp -R ${TESTS_DIR}/ .
+	cp -R ${TESTS_DIR}/ device_tests/
 fi
 cd device_tests
 set +e
