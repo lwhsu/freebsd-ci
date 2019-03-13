@@ -21,7 +21,7 @@ set CMDLINE_RE {root@(?:\w+-cidev)?:~ #}
 # Log results to a file
 log_file -noappend $device.boot.log
 # Don't display current state
-log_user 0
+#log_user 0
 #Enable expect debugging prints
 #exp_internal 1
 
