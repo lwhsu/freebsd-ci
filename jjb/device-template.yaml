@@ -23,6 +23,8 @@
           projects: 'FreeBSD-device-{branch}-*-test'
     builders:
       - add-svn-revision-description
+#     - checkout-scripts-local:
+#         ci-scripts-local-path: '{ci-scripts-local-path}'
       - checkout-scripts:
           ci-scripts-git-path: '{ci-scripts-git-path}'
       - setup-jail
@@ -71,6 +73,8 @@
             LINK_TYPE=latest_tested
     builders:
 #     - add-svn-revision-description
+#     - checkout-scripts-local:
+#         ci-scripts-local-path: '{ci-scripts-local-path}'
       - checkout-scripts:
           ci-scripts-git-path: '{ci-scripts-git-path}'
 #     - setup-jail

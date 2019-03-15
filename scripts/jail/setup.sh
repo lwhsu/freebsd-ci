@@ -125,8 +125,8 @@ if [ "$QUARANTINE" ]; then
 	fi
 fi
 
-sudo jexec ${JNAME} sh -c "/usr/sbin/pw groupadd jenkins -g 5213"
-sudo jexec ${JNAME} sh -c "/usr/sbin/pw useradd jenkins -u 5213 -g 5213 default -c \"Jenkins CI\" -d ${WORKSPACE_IN_JAIL} /bin/sh"
+sudo jexec ${JNAME} sh -c "/usr/sbin/pw groupadd jenkins -g $(id -g)"
+sudo jexec ${JNAME} sh -c "/usr/sbin/pw useradd jenkins -u $(id -u) -g $(id -g) default -c \"Jenkins CI\" -d ${WORKSPACE_IN_JAIL} /bin/sh"
 sudo jexec ${JNAME} sh -c "umask 7337; echo 'jenkins ALL=(ALL) NOPASSWD: ALL' > /usr/local/etc/sudoers.d/jenkins"
 
 echo "build environment:"
