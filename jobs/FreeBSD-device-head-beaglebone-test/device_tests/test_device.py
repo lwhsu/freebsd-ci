@@ -8,7 +8,7 @@ def main():
         print("Invalid Usage: 'DEVICE' environment variable was not defined.", file=sys.stderr)
         sys.exit(1)
     with open(f"{environ['DEVICE']}.boot.log", "w") as logfile:
-        print("Skipped boot for {environ['DEVICE']}", file=logfile)
+        print(f"Skipped boot for {environ['DEVICE']}", file=logfile)
 
 if __name__ == "__main__":
     main()
