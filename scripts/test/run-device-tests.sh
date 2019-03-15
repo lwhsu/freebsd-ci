@@ -9,7 +9,7 @@ if [ -d ${TESTS_DIR} ]; then
 fi
 cd device_tests
 set +e
-./test_device.exp
+./test_device.py
 rc=$?
 set -e
 cd -
