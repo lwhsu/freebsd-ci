@@ -3,14 +3,14 @@
     builders:
       - shell: |
           rm -fr freebsd-ci
-          git clone --depth=1 --single-branch -b master https://github.com/GeraldNDA/freebsd-ci.git
+          git clone --depth=1 --single-branch -b master {ci-scripts-git-path}
 
 - builder:
     name: checkout-scripts-local
     builders:
       - shell: |
           rm -fr freebsd-ci
-          cp -R ~/jenkins-setup/freebsd-ci .
+          cp -R {ci-scripts-local-path}
 
 - builder:
     name: execute-job-build-script

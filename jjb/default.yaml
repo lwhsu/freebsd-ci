@@ -4,3 +4,5 @@
     concurrent: false
     block-downstream: false
     block-upstream: false
+    ci-scripts-git-path: https://github.com/GeraldNDA/freebsd-ci.git
+    ci-scripts-local-path: /usr/local/jenkins/freebsd-ci

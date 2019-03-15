@@ -1,0 +1,98 @@
+- job-template:
+    artifact_path: src/release/artifact
+    defaults: global
+    disabled: '{disable_build}'
+    node_job_build: jailer
+    name: 'FreeBSD-{branch}-{target_arch}-build_devtest'
+    node: '{node_job_build}'
+    scm:
+      - 'FreeBSD-src-{branch}'
+    triggers:
+      - pollscm:
+          cron: "H/5 * * * *"
+    properties:
+      - inject:
+          properties-content: |
+            FBSD_BRANCH={branch}
+            FBSD_TARGET={target}
+            FBSD_TARGET_ARCH={target_arch}
+            ARTIFACT_PATH={artifact_path}
+            LINK_TYPE=latest
+            MOUNT_REPO=src
+      - copyartifact:
+          projects: 'FreeBSD-device-{branch}-*-test'
+    builders:
+      - add-svn-revision-description
+      - checkout-scripts:
+          ci-scripts-git-path: '{ci-scripts-git-path}'
+      - setup-jail
+      - execute-in-jail
+    publishers:
+      - scan-{warnscanner}-warnings
+      - archive:
+          artifacts: '{artifact_path}/**'
+          only-if-success: true
+          fingerprint: true
+          latest-only: true
+      - clean-jail
+      - mail-notify-failure
+      - mail-notify-fixed
+    # - trigger-parameterized-builds:
+    #    - project:
+    #        - 'FreeBSD-{branch}-{device_name}-test':
+    #      condition: SUCCESS
+    #      svn-revision: true
+    #      property-file: trigger.property
+    wrappers:
+      - timestamps
+      - timeout:
+          timeout: 90
+          timeout-var: 'BUILD_TIMEOUT'
+          fail: true
+          type: absolute
+
+- job-template:
+    artifact_path: src/release/artifact
+    defaults: global
+    disabled: '{disable_build}'
+    name: 'FreeBSD-device-{branch}-{device_name}-test'
+    node: master
+    triggers:
+      - reverse:
+          jobs: 'FreeBSD-{branch}-{target_arch}-build_devtest'
+          result: 'success'
+    properties:
+      - inject:
+          properties-content: |
+            FBSD_BRANCH={branch}
+            FBSD_TARGET={target}
+            FBSD_TARGET_ARCH={target_arch}
+            ARTIFACT_PATH={artifact_path}
+            LINK_TYPE=latest_tested
+    builders:
+#     - add-svn-revision-description
+      - checkout-scripts:
+          ci-scripts-git-path: '{ci-scripts-git-path}'
+#     - setup-jail
+      - copyartifact:
+          project: 'FreeBSD-{branch}-{target_arch}-build_devtest'
+          which-build: last-successful
+          flatten: true
+          target: '{artifact_path}'
+          stable: false
+      - execute-job-build-script
+#     - execute-in-jail
+    publishers:
+      - archive:
+          artifacts: '**/*.boot.log'
+          fingerprint: true
+#     - clean-jail
+#     - mail-notify-failure
+#     - mail-notify-fixed
+    wrappers:
+      - timestamps
+      - timeout:
+          timeout: 90
+          timeout-var: 'BUILD_TIMEOUT'
+          fail: true
+          type: absolute
