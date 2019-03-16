@@ -104,12 +104,12 @@ sudo jexec ${JNAME} sh -c "env ASSUME_ALWAYS_YES=yes pkg -r update"
 echo  "done."
 
 echo -n "Installing default pkg list ..."
-sudo jexec ${JNAME} sh -c "env pkg -d install -y `cat freebsd-ci/scripts/jail/default-pkg-list | paste -d ' ' -s -`"
+sudo jexec ${JNAME} sh -c "env pkg install -y `cat freebsd-ci/scripts/jail/default-pkg-list | paste -d ' ' -s -`"
 echo "done."
 
 if [ -s "freebsd-ci/jobs/${JOB_NAME}/pkg-list" ]; then
 	echo "Installing job specific pkg list ... "
-	sudo jexec ${JNAME} sh -c "pkg -d install -y `cat freebsd-ci/jobs/${JOB_NAME}/pkg-list | paste -d ' ' -s -`"
+	sudo jexec ${JNAME} sh -c "pkg install -y `cat freebsd-ci/jobs/${JOB_NAME}/pkg-list | paste -d ' ' -s -`"
 	echo -n "done."
 fi
 
