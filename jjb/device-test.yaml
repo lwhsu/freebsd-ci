@@ -1,16 +1,24 @@
 - project:
     name: FreeBSD-device-tests
-    disable_build: true
+    disable_build: false
     branch:
       - head
     # Define the which devices for each target arch
     jobs:
       - 'FreeBSD-{branch}-aarch64-device_tests':
+          disable_build: true
           target: arm64
           target_arch: aarch64
           warnscanner: clang
           device_name:
             - pinea64
+
+      # Each 32-bit arm device has it's own CONF file so they have their own build job.
+      - 'FreeBSD-{branch}-beaglebone-device_tests':
+          target: arm
+          target_arch: armv7
+          warnscanner: clang
+          device_name:
             - beaglebone
             # devices can be added here for each target arch
  
@@ -19,5 +27,12 @@
     name: 'FreeBSD-{branch}-aarch64-device_tests'
     jobs:
       - 'FreeBSD-{branch}-{target_arch}-build_devtest'
+      - 'FreeBSD-device-{branch}-{device_name}-test'
+
+# Device specific tests can also be done by using {device_name} instead of {target_arch}
+- job-group:
+    name: 'FreeBSD-{branch}-beaglebone-device_tests'
+    jobs:
+      - 'FreeBSD-{branch}-{device_name}-build_devtest'
       - 'FreeBSD-device-{branch}-{device_name}-test'
 

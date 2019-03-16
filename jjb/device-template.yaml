@@ -1,9 +1,11 @@
-- job-template:
+- device_build_defaults: &device_build_defaults
+    disable_build: false
     artifact_path: src/release/artifact
+    conf_name: GENERIC
     defaults: global
     disabled: '{disable_build}'
     node_job_build: jailer
-    name: 'FreeBSD-{branch}-{target_arch}-build_devtest'
+    name: 'FreeBSD-device-build'
     node: '{node_job_build}'
     scm:
       - 'FreeBSD-src-{branch}'
@@ -14,10 +16,7 @@
       - inject:
           properties-content: |
             FBSD_BRANCH={branch}
-            FBSD_TARGET={target}
-            FBSD_TARGET_ARCH={target_arch}
-            ARTIFACT_PATH={artifact_path}
-            LINK_TYPE=latest
+            CONF_NAME={conf_name}
             MOUNT_REPO=src
       - copyartifact:
           projects: 'FreeBSD-device-{branch}-*-test'
@@ -53,7 +52,18 @@
           fail: true
           type: absolute
 
+
+# Generic build job for an entire architecture
 - job-template:
+    name: 'FreeBSD-{branch}-{target_arch}-build_devtest'
+    <<: *device_build_defaults
+
+- job-template:
+    name: 'FreeBSD-{branch}-{device_name}-build_devtest'
+    <<: *device_build_defaults    
+
+- job-template:
+    disable_build: false
     artifact_path: src/release/artifact
     defaults: global
     disabled: '{disable_build}'
@@ -61,16 +71,14 @@
     node: master
     triggers:
       - reverse:
-          jobs: 'FreeBSD-{branch}-{target_arch}-build_devtest'
+          jobs: 
+            - 'FreeBSD-{branch}-{target_arch}-build_devtest'
+            - 'FreeBSD-{branch}-{device_name}-build_devtest'
           result: 'success'
     properties:
       - inject:
           properties-content: |
             FBSD_BRANCH={branch}
-            FBSD_TARGET={target}
-            FBSD_TARGET_ARCH={target_arch}
-            ARTIFACT_PATH={artifact_path}
-            LINK_TYPE=latest_tested
     builders:
 #     - add-svn-revision-description
 #     - checkout-scripts-local:
