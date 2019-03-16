@@ -2,7 +2,7 @@
 
 
 JOB_BASE=`dirname $0`
-cat ${JOB_BASE}/${CONF_NAME}-NFS | tee ${WORKSPACE}/src/sys/arm64/conf/${CONF_NAME}-NFS
+cat ${JOB_BASE}/${CONF_NAME}-NFS | tee ${WORKSPACE}/src/sys/arm/conf/${CONF_NAME}-NFS
 
 env \
 	JFLAG=${BUILDER_JFLAG} \
