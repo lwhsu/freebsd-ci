@@ -37,6 +37,6 @@ sudo mv /usr/obj/usr/src/${TARGET}.${TARGET_ARCH}/release/MANIFEST ${ARTIFACT_DE
 
 echo "r${SVN_REVISION}" | sudo tee ${ARTIFACT_DEST}/revision.txt
 
-cat <<- EOF > ${ARTIFACT_DEST}/trigger.property
+cat <<- EOF | sudo tee ${ARTIFACT_DEST}/trigger.property
 	SVN_REVISION=${SVN_REVISION}
 EOF
