@@ -6,14 +6,13 @@ include BEAGLEBONE
 ident   BEAGLEBONE-NFS
 
 # NFS Support
-options NFSD
-#options NFSCL
-#options NFSLOCKD
-#options NFS_ROOT
+options NFSCL
+options NFSLOCKD
 
 # NFS Root Support
-options BOOTP
+options NFS_ROOT
 options BOOTP_NFSROOT
 options BOOTP_COMPAT
+options BOOTP
 options BOOTP_NFSV3
-options BOOTP_WIRED_TO=ue0
+#options BOOTP_WIRED_TO=ue1
