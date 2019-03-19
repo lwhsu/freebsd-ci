@@ -8,6 +8,12 @@ from pexpect import spawn, run
 from pexpect import EOF, TIMEOUT
 
 
+class DevicePanic(Exception):
+    def __init__(self, *args, **kwargs):
+        if not (args or kwargs):
+            args = ("Encountered a panic while trying to boot device.",)
+        super().__init__(*args, **kwargs)
+
 class DevicePowerError(Exception):
     def __init__(self, operation, device_name, *args, **kwargs):
         message = f"Failed to do '{operation}' for '{device_name}'"
@@ -46,6 +52,7 @@ class ConsoleHandler(object):
 
     def __init__(self, device, timeout=300):
         self.tests = set()
+        self.panic_actions = set()
         self.device = device
         self.timeout = timeout
         self.console = None
@@ -88,13 +95,16 @@ class ConsoleHandler(object):
         self.verify_console()
         # Special timeout for booting since it takes longer
         idx = self.console.expect_exact([
-            "hit [Enter] to boot or any other key to stop",
+            "panic:",
             "login:"
         ], timeout=self.timeout)
         if idx == 0:
-            self.console.send("\r\n")
-            self.console.expect("login:")
-        self.do_login()
+            # send some commands
+            for panic_action in self.panic_actions:
+                panic_action(self)
+            raise DevicePanic()
+        else:
+            self.do_login()
         self.device.turn_off()
 
 def err(msg):
@@ -120,8 +130,24 @@ def main():
         with suppress(ModuleNotFoundError):
             # Tests to run should be in a list 'to_run' in 'tests.py'
             # in the current directory.
-            from tests import to_run
-            console_handler.tests = to_run
+            import tests
+            # Should provide 2 iterables that provide functions: (to_run and panic_actions)
+            # to_run: iterable of functions to run after successful login.
+            #         Should be used to send commands and verify they work on the device.
+            # panic_actions: iterable of functions to run after a panic
+            #                Should be used to get extra debugging information (i.e. show bt) from a panic.
+            # each function should take a console handler object:
+            # console_handler
+            # ->tests - the list of tests
+            # ->panic_actions - the list of panic actions
+            # ->device - the device object (contains name, and power methods)
+            # ->timeout - the  boot timeout
+            # ->console - the pexpect instance
+
+            if hasattr(tests, 'to_run'):
+                console_handler.tests = tests.to_run
+            if hasattr(tests, 'panic_actions'):
+                console_handler.panic_actions = tests.panic_actions
         # May raise timeout and EOF exceptions
         console_handler.run_tests()
 
