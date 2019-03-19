@@ -99,6 +99,7 @@ class ConsoleHandler(object):
             "login:"
         ], timeout=self.timeout)
         if idx == 0:
+            self.console.expect_exact("db> ")
             # send some commands
             for panic_action in self.panic_actions:
                 panic_action(self)
