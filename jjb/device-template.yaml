@@ -81,6 +81,15 @@
       - inject:
           properties-content: |
             FBSD_BRANCH={branch}
+            ARTIFACT_PATH={artifact_path}
+          groovy-content: |
+            jobs = jenkins.model.Jenkins.instance.jobNames;
+            if("FreeBSD-{branch}-{target_arch}-build_devtest" in jobs) {{
+                return [USE_ARCH_BUILD: 1, USE_DEVICE_BUILD: 0]
+            }} else if ("FreeBSD-{branch}-{device_name}-build_devtest" in jobs) {{
+                return [USE_DEVICE_BUILD: 1, USE_ARCH_BUILD: 0]
+            }}
+            return null;
     builders:
 #     - add-svn-revision-description
 #     - checkout-scripts-local:
@@ -88,12 +97,26 @@
       - checkout-scripts:
           ci-scripts-git-path: '{ci-scripts-git-path}'
 #     - setup-jail
-      - copyartifact:
-          project: 'FreeBSD-{branch}-{target_arch}-build_devtest'
-          which-build: last-successful
-          flatten: true
-          target: '{artifact_path}'
-          stable: false
+      - conditional-step:
+          condition-kind: boolean-expression
+          condition-expression: $USE_ARCH_BUILD
+          steps:
+            - copyartifact:
+                project: 'FreeBSD-{branch}-{target_arch}-build_devtest'
+                which-build: last-successful
+                flatten: true
+                target: '{artifact_path}'
+                stable: false
+      - conditional-step:
+          condition-kind: boolean-expression
+          condition-expression: $USE_DEVICE_BUILD
+          steps:
+            - copyartifact:
+                project: 'FreeBSD-{branch}-{device_name}-build_devtest'
+                which-build: last-successful
+                flatten: true
+                target: '{artifact_path}'
+                stable: false
       - execute-job-build-script
 #     - execute-in-jail
     publishers:
