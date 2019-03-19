@@ -1,7 +1,8 @@
 #!/bin/sh
 
 DIST_PACKAGES="base kernel tests"
-DESTDIR=/b/tftpboot/${DEVICE}/install
+TFTPROOT=/b/tftpboot
+DESTDIR=${TFTPROOT}/${DEVICE}/install
 
 # clean up destdir
 sudo mkdir -p ${DESTDIR}
@@ -13,6 +14,9 @@ for f in ${DIST_PACKAGES}
 do
 	sudo tar Jxf ${ARTIFACT_PATH}/${f}.txz -C ${DESTDIR}
 done
+
+sudo mkdir -p ${TFTPROOT}/dtb
+sudo cp -r ${DESTDIR}/boot/dtb ${TFTPROOT}/dtb
 
 # Create new fstab
 cat <<- EOF | sudo tee ${DESTDIR}/etc/fstab
