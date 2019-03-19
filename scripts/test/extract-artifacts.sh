@@ -32,7 +32,7 @@ cat <<- EOF | sudo tee ${DESTDIR}/boot/loader.conf
 	boot_serial="YES"
 	comconsole_speed="115200"
 	# Disable autoboot timer and beastie display
-	autoboot_delay="NO"
+	autoboot_delay="-1"
 	beastie_disable="YES"
 EOF
 
