@@ -1,8 +1,8 @@
 #!/bin/sh
 
-DIST_PACKAGES="base kernel tests"
-TFTPROOT=/b/tftpboot
-DESTDIR=${TFTPROOT}/${DEVICE}/install
+: ${DIST_PACKAGES:="base kernel tests"}
+: ${TFTPROOT:="/b/tftpboot"}
+: ${DESTDIR:="${TFTPROOT}/${DEVICE}/install"}
 
 # clean up destdir
 sudo mkdir -p ${DESTDIR}
