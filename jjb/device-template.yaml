@@ -81,6 +81,9 @@
       - inject:
           properties-content: |
             FBSD_BRANCH={branch}
+            FBSD_TARGET={target}
+            FBSD_TARGET_ARCH={target_arch}
+            DEVICE_NAME={device_name}
             ARTIFACT_PATH={artifact_path}
           groovy-content: |
             jobs = jenkins.model.Jenkins.instance.jobNames;

@@ -1,8 +1,8 @@
 #!/bin/sh
 
-export TARGET=arm64
-export TARGET_ARCH=aarch64
-export DEVICE=beaglebone
+export TARGET=${FBSD_TARGET}
+export TARGET_ARCH=${FBSD_TARGET_ARCH}
+export DEVICE=${DEVICE_NAME}
 
 sh -x freebsd-ci/scripts/test/extract-artifacts.sh
 sh -x freebsd-ci/scripts/test/run-device-tests.sh
