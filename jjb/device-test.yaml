@@ -1,12 +1,10 @@
 - project:
     name: FreeBSD-device-tests
-    disable_build: false
     branch:
       - head
     # Define the which devices for each target arch
     jobs:
       - 'FreeBSD-{branch}-aarch64-device_tests':
-          disable_build: true
           target: arm64
           target_arch: aarch64
           warnscanner: clang
