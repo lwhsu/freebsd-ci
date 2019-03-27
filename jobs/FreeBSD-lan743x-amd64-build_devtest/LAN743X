@@ -1,0 +1,15 @@
+# Configuration file for kernel type: LAN743X
+# Provides support for LAN743x devices
+# $FreeBSD$
+
+#files		"../../conf/files.LAN743X"
+
+include		GENERIC-NFS
+
+ident 		LAN743X
+
+
+#options 	KDB
+#options	DDB
+
+device 		lan743x

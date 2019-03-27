@@ -35,6 +35,7 @@
     name: 'FreeBSD-{branch}-amd64-device_proto'
     jobs:
       - 'FreeBSD-{branch}-{target_arch}-build_devtest'
+      - 'FreeBSD-device-{branch}-{device_name}-test'
  
  # Create another one of these groups for each target arch
 - job-group:
