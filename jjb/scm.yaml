@@ -18,6 +18,17 @@
           browser: auto
 
 - scm:
+    name: FreeBSD-src-lan743x
+    scm:
+      - git:
+          url: https://github.com/GeraldNDA/freebsd.git
+          branches:
+           - origin/lan743x_net_if
+          browser: auto
+          shallow-clone: true
+          wipe-workspace: false
+          # would need a timeout if "shallow clone" and "wipe workspace" were unset
+- scm:
     name: FreeBSD-src-head-empty
     scm:
       - svn:

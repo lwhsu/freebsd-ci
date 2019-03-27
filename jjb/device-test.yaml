@@ -19,6 +19,22 @@
           device_name: beaglebone
           conf_name: BEAGLEBONE
             # devices can be added here for each target arch
+
+- project:
+    name: FreeBSD-device-prototyping
+    branch:
+      - lan743x
+    jobs:
+      - 'FreeBSD-{branch}-amd64-device_proto':
+          target: amd64
+          target_arch: amd64
+          warnscanner: clang
+          device_name: asrock
+
+- job-group:
+    name: 'FreeBSD-{branch}-amd64-device_proto'
+    jobs:
+      - 'FreeBSD-{branch}-{target_arch}-build_devtest'
  
  # Create another one of these groups for each target arch
 - job-group:
