@@ -11,6 +11,8 @@ def check_status(ch, msg):
     res = ch.console.expect(["0", r"\d+"])
     if res == 1:
         errno = ch.console.match.group(0)
+        if type(errno) is bytes:
+            errno = errno.decode()
         raise TestFailure(f"Failed test with err {errno}: {msg}")
     ch.console.expect(ch.CMDLINE_RE)
 
