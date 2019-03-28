@@ -5,4 +5,5 @@
 : ${DESTDIR:="${TFTPROOT}/${DEVICE}/install"}
 GITHUB_REPO=https://github.com/dumbbell/test-tls-initial-exec
 
-git clone ${GITHUB_REPO} ${DESTDIR}/root/test
+git clone ${GITHUB_REPO} test
+sudo mv test ${DESTDIR}/root
