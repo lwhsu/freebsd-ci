@@ -161,7 +161,7 @@ def main():
             if hasattr(tests, 'panic_actions'):
                 console_handler.panic_actions = tests.panic_actions
                 print(f"Found tests.panic_actions which provided {len(console_handler.panic_actions)} actions")
-        if not (console_hander.tests or console_handler.panic_actions):
+        if not (console_handler.tests or console_handler.panic_actions):
             print("Did not find any tests or panic actions. Running default boot and shutdown sequence.")
         # May raise timeout and EOF exceptions
         console_handler.run_tests()
