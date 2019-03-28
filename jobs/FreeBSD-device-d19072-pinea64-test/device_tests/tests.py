@@ -34,4 +34,4 @@ def test_tls_initial_exec(ch):
         return (False, str(e))
     return (True, None)
 
-to_run.append(example_test)
+to_run.append(test_tls_initial_exec)
