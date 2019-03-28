@@ -74,12 +74,18 @@ class ConsoleHandler(object):
     def do_login(self):
         self.console.sendline("root")
         self.console.expect(ConsoleHandler.CMDLINE_RE)
+        print("Boot was successful. Running tests ...")
         for test in self.tests:
+            print(f"> {test.__name__}")
+
             # Provides:
             # - device (name and power methods)
             # - console (for expect methods)
             # - boot timeout length
             test(self)
+            # NOTE: A panic could happen after/during a test.
+            # May want to check for panics after "login:"
+        print("Done all tests. Powering off.")
         self.console.sendline("poweroff")
         # poweroff can take quite a while ...
         self.console.expect(r"Uptime: (?:\d+m)?\d+s", timeout=self.timeout)
@@ -101,8 +107,11 @@ class ConsoleHandler(object):
         if idx == 0:
             self.console.expect_exact("db> ")
             # send some commands
+            print("Panic was hit. Running panic actions ...")
             for panic_action in self.panic_actions:
+                print(f"> {panic_action.__name__}")
                 panic_action(self)
+            print("Done all panic actions.")
             raise DevicePanic()
         else:
             self.do_login()
@@ -128,10 +137,12 @@ def main():
     with open(f"{device}.boot.log", "wb") as logfile:
         device_handler = DeviceHandler(device, logfile)
         console_handler = ConsoleHandler(device_handler, timeout=boot_timeout)
+        print("Loading tests ...")
         with suppress(ModuleNotFoundError):
             # Tests to run should be in a list 'to_run' in 'tests.py'
             # in the current directory.
             import tests
+            print("Found tests.py")
             # Should provide 2 iterables that provide functions: (to_run and panic_actions)
             # to_run: iterable of functions to run after successful login.
             #         Should be used to send commands and verify they work on the device.
@@ -144,13 +155,17 @@ def main():
             # ->device - the device object (contains name, and power methods)
             # ->timeout - the  boot timeout
             # ->console - the pexpect instance
-
             if hasattr(tests, 'to_run'):
                 console_handler.tests = tests.to_run
+                print(f"Found tests.to_run which provided {len(console_handler.tests)} tests")
             if hasattr(tests, 'panic_actions'):
                 console_handler.panic_actions = tests.panic_actions
+                print(f"Found tests.panic_actions which provided {len(console_handler.panic_actions)} actions")
+        if not (console_hander.tests or console_handler.panic_actions):
+            print("Did not find any tests or panic actions. Running default boot and shutdown sequence.")
         # May raise timeout and EOF exceptions
         console_handler.run_tests()
+        print("All Done.")
 
 if __name__ == "__main__":
     main()
