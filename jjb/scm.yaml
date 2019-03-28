@@ -25,9 +25,10 @@
           branches:
            - origin/lan743x_net_if
           browser: auto
+          basedir: src
           shallow-clone: true
           wipe-workspace: false
-          # would need a timeout if "shallow clone" and "wipe workspace" were unset
+          timeout: 20 #mins
 
 - scm:
     name: FreeBSD-src-d19072
@@ -37,6 +38,7 @@
           branches:
            - origin/D19072
           browser: auto
+          basedir: src
           shallow-clone: true
           wipe-workspace: false
           timeout: 20 #mins
