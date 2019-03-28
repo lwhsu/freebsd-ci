@@ -8,9 +8,9 @@ class TestFailure(Exception):
 
 def check_status(ch, msg):
     ch.console.sendline("echo $?")
-    res = ch.expect(["0", r"\d+"])
+    res = ch.console.expect(["0", r"\d+"])
     if res == 1:
-        errno = ch.match.groups(0)
+        errno = ch.console.match.groups(0)
         raise TestFailure(f"Failed test with err {errno}: {msg}")
 
 def test_tls_initial_exec(ch):
