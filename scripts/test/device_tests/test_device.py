@@ -76,6 +76,7 @@ class ConsoleHandler(object):
         self.console.expect(ConsoleHandler.CMDLINE_RE)
         print("Boot was successful. Running tests ...")
         failed_tests = 0
+        num_tests = len(self.tests)
         for test in self.tests:
             print(f"> {test.__name__}")
 
@@ -107,7 +108,8 @@ class ConsoleHandler(object):
                 print()
             # NOTE: A panic could happen after/during a test.
             # May want to check for panics after "login:"
-        print(f"Done all tests. Passed ({failed_tests}/{len(self.tests)}).")
+        passed_tests = num_tests - failed_tests
+        print(f"Done all tests. Passed ({passed_tests}/{num_tests}).")
         print("Powering off.")
         self.console.sendline("poweroff")
         # poweroff can take quite a while ...

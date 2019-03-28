@@ -10,7 +10,7 @@ def check_status(ch, msg):
     ch.console.sendline("echo $?")
     res = ch.console.expect(["0", r"\d+"])
     if res == 1:
-        errno = ch.console.match.groups(0)
+        errno = ch.console.match.group(0)
         raise TestFailure(f"Failed test with err {errno}: {msg}")
     ch.console.expect(ch.CMDLINE_RE)
 
