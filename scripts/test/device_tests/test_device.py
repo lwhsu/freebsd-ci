@@ -113,6 +113,7 @@ class ConsoleHandler(object):
         # poweroff can take quite a while ...
         self.console.expect(r"Uptime: (?:\d+m)?\d+s", timeout=self.timeout)
         self.exit_console()
+        return not bool(failed_tests)
 
     def run_tests(self):
         self.console = spawn("console", ["-f", self.device.name],
@@ -122,6 +123,7 @@ class ConsoleHandler(object):
         )
         self.device.turn_on()
         self.verify_console()
+        passed_all = True
         # Special timeout for booting since it takes longer
         idx = self.console.expect_exact([
             "panic:",
@@ -137,8 +139,9 @@ class ConsoleHandler(object):
             print("Done all panic actions.")
             raise DevicePanic()
         else:
-            self.do_login()
+            passed_all = self.do_login()
         self.device.turn_off()
+        return passed_all
 
 def err(msg):
     print(msg, file=sys.stderr)
@@ -191,8 +194,9 @@ def main():
         if not (console_handler.tests or console_handler.panic_actions):
             print("Running default boot and shutdown sequence.")
         # May raise timeout and EOF exceptions
-        console_handler.run_tests()
+        passed_all = console_handler.run_tests()
         print("All Done.")
+        return int(not passed_all) # return 0 if passed_all otherwise 1
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
