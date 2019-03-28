@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/local/bin/python3 -u
 
 import sys
 
@@ -99,11 +99,11 @@ class ConsoleHandler(object):
                     msg = ""
                 else:
                     msg = f" with message '{str(msg)}'"
-                if not passed:
+                if passed:
+                    print("> PASS" + msg)
+                else:
                     failed_tests += 1
                     print("> FAIL" + msg)
-                else:
-                    print("> PASS" + msg)
                 print()
             # NOTE: A panic could happen after/during a test.
             # May want to check for panics after "login:"

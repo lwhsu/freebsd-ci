@@ -12,6 +12,7 @@ def check_status(ch, msg):
     if res == 1:
         errno = ch.console.match.groups(0)
         raise TestFailure(f"Failed test with err {errno}: {msg}")
+    ch.console.expect(ch.CMDLINE_RE)
 
 def test_tls_initial_exec(ch):
     try:
@@ -28,10 +29,12 @@ def test_tls_initial_exec(ch):
         if res == 1:
             check_status(ch, "Did not get 'foo: 2016' when running './app-link'")
             return (False, "Unexpected result but no errno.")
+
         ch.console.expect(ch.CMDLINE_RE)
         # DONE
     except TestFailure as e:
         return (False, str(e))
+
     return (True, None)
 
 to_run.append(test_tls_initial_exec)
