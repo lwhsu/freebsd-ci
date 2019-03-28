@@ -2,6 +2,7 @@
     name: FreeBSD-device-tests
     branch:
       - head
+      - d19072
     # Define the which devices for each target arch
     jobs:
       - 'FreeBSD-{branch}-aarch64-device_tests':

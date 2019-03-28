@@ -28,6 +28,19 @@
           shallow-clone: true
           wipe-workspace: false
           # would need a timeout if "shallow clone" and "wipe workspace" were unset
+
+- scm:
+    name: FreeBSD-src-d19072
+    scm:
+      - git:
+          url: https://github.com/GeraldNDA/freebsd.git
+          branches:
+           - origin/D19072
+          browser: auto
+          shallow-clone: true
+          wipe-workspace: false
+          timeout: 20 #mins
+
 - scm:
     name: FreeBSD-src-head-empty
     scm:
