@@ -3,30 +3,35 @@
 to_run = []
 panic_actions = []
 
-def example_test(ch):
-    # ch is the console handler
-    # before running this function, the device has already been logged into.
-    # ch->timeout is the boot timeout (default 5 minutes) otherwise every expect timeout is 1 minute.
-    # ch->console is the Pexpect instance for running commands
-    # ch-> device is the device instance. 
-    # ch->device->name is the device name
-    # ch->device->turn_on/turn_off are methods for controlling the power to the device.
-    # ch->CMDLINE_RE is the regex for the commandline
-    
-    ch.console.sendline("cd test")
-    ch.console.expect(ch.CMDLINE_RE)
-    ch.console.sendline("make test")
-    ch.console.expect(ch.CMDLINE_RE)
-    ch.console.sendline("./app-link")
-    ch.console.expect("foo:")
-    ch.console.expect(ch.CMDLINE_RE)
-    # DONE
-    
+class TestFailure(Exception):
+    pass
 
-def bt_on_panic(ch):
-    # before running this function, the device panicked during boot
-    ch.console.sendline("bt")
+def check_status(ch, msg):
+    ch.console.sendline("echo $?")
+    res = ch.expect(["0", r"\d+"])
+    if res == 1:
+        errno = ch.match.groups(0)
+        raise TestFailure(f"Failed test with err {errno}: {msg}")
 
-# You can add multiple functions to either list. The will be run in the order of the list. 
+def test_tls_initial_exec(ch):
+    try:
+        ch.console.sendline("cd test")
+        ch.console.expect(ch.CMDLINE_RE)
+        check_status(ch, "Moving to test directory")
+
+        ch.console.sendline("make test")
+        ch.console.expect(ch.CMDLINE_RE)
+        check_status(ch, "Making test (and running test)")
+
+        ch.console.sendline("./app-link")
+        res = ch.console.expect(["foo: 2016", ch.CMDLINE_RE])
+        if res == 1:
+            check_status(ch, "Did not get 'foo: 2016' when running './app-link'")
+            return (False, "Unexpected result but no errno.")
+        ch.console.expect(ch.CMDLINE_RE)
+        # DONE
+   except TestFailure as e:
+       return (False, str(e))
+   return (True, None)
+
 to_run.append(example_test)
-panic_actions.append(bt_on_panic)

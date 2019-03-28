@@ -75,6 +75,7 @@ class ConsoleHandler(object):
         self.console.sendline("root")
         self.console.expect(ConsoleHandler.CMDLINE_RE)
         print("Boot was successful. Running tests ...")
+        failed_tests = 0
         for test in self.tests:
             print(f"> {test.__name__}")
 
@@ -82,10 +83,32 @@ class ConsoleHandler(object):
             # - device (name and power methods)
             # - console (for expect methods)
             # - boot timeout length
-            test(self)
+            resp = test(self)
+            if resp is None:
+                print(f"> Returned nothing. Assuming PASS.")
+                print()
+                continue
+            else:
+                if len(resp) != 2 or type(resp[0]) is not bool:
+                    print(f"> Returned invalid response '{resp}'. Should have been of the form '[bool, str(msg)]'")
+                    print()
+                    failed_tests += 1
+                    continue
+                passed, msg = resp
+                if not msg:
+                    msg = ""
+                else:
+                    msg = f" with message '{str(msg)}'"
+                if not passed:
+                    failed_tests += 1
+                    print("> FAIL" + msg)
+                else:
+                    print("> PASS" + msg)
+                print()
             # NOTE: A panic could happen after/during a test.
             # May want to check for panics after "login:"
-        print("Done all tests. Powering off.")
+        print(f"Done all tests. Passed ({failed_tests}/{len(self.tests)}).")
+        print("Powering off.")
         self.console.sendline("poweroff")
         # poweroff can take quite a while ...
         self.console.expect(r"Uptime: (?:\d+m)?\d+s", timeout=self.timeout)
@@ -158,11 +181,15 @@ def main():
             if hasattr(tests, 'to_run'):
                 console_handler.tests = tests.to_run
                 print(f"Found tests.to_run which provided {len(console_handler.tests)} tests")
+            else:
+               print("Found no tests.to_run")
             if hasattr(tests, 'panic_actions'):
                 console_handler.panic_actions = tests.panic_actions
                 print(f"Found tests.panic_actions which provided {len(console_handler.panic_actions)} actions")
+            else:
+               print("Found no tests.panic_actions")
         if not (console_handler.tests or console_handler.panic_actions):
-            print("Did not find any tests or panic actions. Running default boot and shutdown sequence.")
+            print("Running default boot and shutdown sequence.")
         # May raise timeout and EOF exceptions
         console_handler.run_tests()
         print("All Done.")
