@@ -26,12 +26,6 @@ def test_tls_initial_exec(ch):
         ch.console.expect(ch.CMDLINE_RE)
         check_status(ch, "Making test (and running test)")
 
-        ch.console.sendline("./app-link")
-        res = ch.console.expect(["foo: 2016", ch.CMDLINE_RE])
-        if res == 1:
-            check_status(ch, "Did not get 'foo: 2016' when running './app-link'")
-            return (False, "Unexpected result but no errno.")
-
         ch.console.expect(ch.CMDLINE_RE)
         # DONE
     except TestFailure as e:
