@@ -30,8 +30,8 @@ def test_tls_initial_exec(ch):
             return (False, "Unexpected result but no errno.")
         ch.console.expect(ch.CMDLINE_RE)
         # DONE
-   except TestFailure as e:
-       return (False, str(e))
-   return (True, None)
+    except TestFailure as e:
+        return (False, str(e))
+    return (True, None)
 
 to_run.append(example_test)
