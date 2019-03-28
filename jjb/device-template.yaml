@@ -1,3 +1,19 @@
+- publisher:
+    name: poweroff
+    device: unspecified
+    publishers:
+      - postbuildscript:
+          mark-unstable-if-failed: false
+          builders:
+            - build-on:
+                - SUCCESS
+                - NOT_BUILT
+                - ABORTED
+                - FAILURE
+                - UNSTABLE
+              build-steps:
+                - shell: 'devpowerctl turn_off ${DEVICE_NAME}'
+
 - device_build_defaults: &device_build_defaults
     disable_build: false
     artifact_path: src/release/artifact
@@ -126,6 +142,7 @@
       - archive:
           artifacts: '**/*.boot.log'
           fingerprint: true
+      - poweroff
 #     - clean-jail
 #     - mail-notify-failure
 #     - mail-notify-fixed
