@@ -25,8 +25,6 @@ def test_tls_initial_exec(ch):
         ch.console.sendline("make test")
         ch.console.expect(ch.CMDLINE_RE)
         check_status(ch, "Making test (and running test)")
-
-        ch.console.expect(ch.CMDLINE_RE)
         # DONE
     except TestFailure as e:
         return (False, str(e))
