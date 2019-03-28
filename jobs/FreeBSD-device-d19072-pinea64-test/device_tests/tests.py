@@ -13,19 +13,19 @@ def example_test(ch):
     # ch->device->turn_on/turn_off are methods for controlling the power to the device.
     # ch->CMDLINE_RE is the regex for the commandline
     
-    ch.sendline("cd test")
-    ch.expect(ch.CMDLINE_RE)
-    ch.sendline("make test")
-    ch.expect(ch.CMDLINE_RE)
-    ch.sendline("./app-link")
-    ch.expect("foo:")
-    ch.expect(ch.CMDLINE_RE)
+    ch.console.sendline("cd test")
+    ch.console.expect(ch.CMDLINE_RE)
+    ch.console.sendline("make test")
+    ch.console.expect(ch.CMDLINE_RE)
+    ch.console.sendline("./app-link")
+    ch.console.expect("foo:")
+    ch.console.expect(ch.CMDLINE_RE)
     # DONE
     
 
 def bt_on_panic(ch):
     # before running this function, the device panicked during boot
-    ch.sendline("bt")
+    ch.console.sendline("bt")
 
 # You can add multiple functions to either list. The will be run in the order of the list. 
 to_run.append(example_test)
