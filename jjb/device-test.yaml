@@ -23,7 +23,6 @@
 
 - project:
     name: FreeBSD-device-prototyping
-    disable_build: true
     branch:
       - bbone-cpsw
     jobs:
