@@ -21,7 +21,7 @@ fi
 if [ -n "${MOUNT_REPO}" ]; then
 	_MOUNT_PATHS="usr/${MOUNT_REPO} dev ${WORKSPACE_IN_JAIL}"
 	for _MOUNT_PATH in ${_MOUNT_PATHS}; do
-		if mount -p ${JPATH}/${_MOUNT_PATH}; then
+		if df ${JPATH}/${_MOUNT_PATH} | grep -q ${JPATH}/${_MOUNT_PATH}; then
 			sudo umount ${JPATH}/${_MOUNT_PATH}
 		fi
 	done
