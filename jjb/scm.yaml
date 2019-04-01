@@ -31,12 +31,12 @@
           timeout: 20 #mins
 
 - scm:
-    name: FreeBSD-src-d19072
+    name: FreeBSD-src-bbone-cpsw
     scm:
       - git:
           url: https://github.com/GeraldNDA/freebsd.git
           branches:
-           - origin/D19072
+           - origin/bbone-cpsw
           browser: auto
           basedir: src
           shallow-clone: true
