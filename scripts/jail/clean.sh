@@ -17,13 +17,13 @@ if [ ${BUILDER_NETIF} -a ${BUILDER_JAIL_IP4} ]; then
 fi
 
 if [ -n "${MOUNT_REPO}" ]; then
-	PATHS=""
-	PATHS+=usr/${MOUNT_REPO#/}
-	PATHS+=dev
-	PATHS+=${WORKSPACE_IN_JAIL#/}
-	for path in PATHS; do
-		if [mount -p | grep -q ${JPATH}/${path} ]; then
-			sudo umount ${JPATH}/${path}
+	_MOUNT_PATHS=""
+	_MOUNT_PATHS+=usr/${MOUNT_REPO}
+	_MOUNT_PATHS+=dev
+	_MOUNT_PATHS+=${WORKSPACE_IN_JAIL}
+	for _MOUNT_PATH in _MOUNT_PATHS; do
+		if [ mount -p ${JPATH}/${_MOUNT_PATH} ]; then
+			sudo umount ${JPATH}/${_MOUNT_PATH}
 		fi
 	done
 fi
