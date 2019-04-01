@@ -22,4 +22,5 @@ fi
 sudo umount ${JPATH}/${WORKSPACE_IN_JAIL} || true
 sudo umount ${JPATH}/dev || true
 
+sudo chflags -R noschg ${ZFS_PARENT}/${JNAME} || true
 sudo rm -rf ${ZFS_PARENT}/${JNAME} || true
