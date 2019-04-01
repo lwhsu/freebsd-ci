@@ -186,12 +186,12 @@ def main():
             if hasattr(tests, 'to_run'):
                 console_handler.tests = tests.to_run
                 print(f"Found tests.to_run which provided {len(console_handler.tests)} tests")
-            else:
+            if not console_handler.tests:
                print("Found no tests.to_run")
             if hasattr(tests, 'panic_actions'):
                 console_handler.panic_actions = tests.panic_actions
                 print(f"Found tests.panic_actions which provided {len(console_handler.panic_actions)} actions")
-            else:
+            if not console_handler.panic_actions:
                print("Found no tests.panic_actions")
         if not (console_handler.tests or console_handler.panic_actions):
             print("Running default boot and shutdown sequence.")
