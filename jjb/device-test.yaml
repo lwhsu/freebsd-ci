@@ -1,6 +1,5 @@
 - project:
     name: FreeBSD-device-tests
-    disable_build: true
     branch:
       - head
     # Define the which devices for each target arch
@@ -23,17 +22,6 @@
 
 - project:
     name: FreeBSD-device-prototyping
-    branch:
-      - bbone-cpsw
-    jobs:
-      - 'FreeBSD-{branch}-beaglebone-device_tests':
-          target: arm
-          target_arch: armv7
-          warnscanner: clang
-          device_name: beaglebone
-          conf_name: BEAGLEBONE
-            # devices can be added here for each target arch
-
 
  # Create another one of these groups for each target arch
 - job-group:

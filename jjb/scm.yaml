@@ -16,43 +16,10 @@
           branches:
            - master
           browser: auto
-
-- scm:
-    name: FreeBSD-src-lan743x
-    scm:
-      - git:
-          url: https://github.com/GeraldNDA/freebsd.git
-          branches:
-           - origin/lan743x_net_if
-          browser: auto
           basedir: src
           shallow-clone: true
           wipe-workspace: false
           timeout: 20 #mins
-
-- scm:
-    name: FreeBSD-src-bbone-cpsw
-    scm:
-      - git:
-          url: https://github.com/GeraldNDA/freebsd.git
-          branches:
-           - origin/bbone-cpsw
-          browser: auto
-          basedir: src
-          shallow-clone: true
-          wipe-workspace: false
-          timeout: 20 #mins
-
-- scm:
-    name: FreeBSD-src-head-empty
-    scm:
-      - svn:
-          repos:
-            - url: svn://svn.freebsd.org/base/head/@${SVN_REVISION}
-              basedir: src
-              repo-depth: empty
-          workspaceupdater: update
-          viewvc-url: https://svnweb.FreeBSD.org/base/
 
 - scm:
     name: FreeBSD-src-stable-12
