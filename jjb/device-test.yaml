@@ -11,14 +11,22 @@
           device_name:
             - pinea64
 
-      # Each 32-bit arm device has it's own CONF file so they have their own build job.
-      - 'FreeBSD-{branch}-beaglebone-device_tests':
+      - 'FreeBSD-{branch}-armv7-device_tests':
           target: arm
           target_arch: armv7
           warnscanner: clang
-          device_name: beaglebone
-          conf_name: BEAGLEBONE
-            # devices can be added here for each target arch
+          device_name:
+            - beaglebone
+
+      # Some 32-bit arm devices has it's own CONF file so they have their own build job.
+      #
+      # (beaglebone can now use GENERIC it seems)
+      # - 'FreeBSD-{branch}-beaglebone-device_tests':
+      #    target: arm
+      #    target_arch: armv7
+      #    warnscanner: clang
+      #    device_name: beaglebone
+      #    conf_name: BEAGLEBONE
 
 - project:
     name: FreeBSD-device-prototyping
@@ -30,10 +38,15 @@
       - 'FreeBSD-{branch}-{target_arch}-build_devtest'
       - 'FreeBSD-device-{branch}-{device_name}-test'
 
-# Device specific tests can also be done by using {device_name} instead of {target_arch}
 - job-group:
-    name: 'FreeBSD-{branch}-beaglebone-device_tests'
+    name: 'FreeBSD-{branch}-armv7-device_tests'
     jobs:
-      - 'FreeBSD-{branch}-{device_name}-build_devtest'
+      - 'FreeBSD-{branch}-{target_arch}-build_devtest'
       - 'FreeBSD-device-{branch}-{device_name}-test'
+# Device specific tests can also be done by using {device_name} instead of {target_arch}
+#- job-group:
+#    name: 'FreeBSD-{branch}-beaglebone-device_tests'
+#    jobs:
+#      - 'FreeBSD-{branch}-{device_name}-build_devtest'
+#      - 'FreeBSD-device-{branch}-{device_name}-test'
 
