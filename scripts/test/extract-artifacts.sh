@@ -46,3 +46,6 @@ cat <<- EOF | sudo tee ${DESTDIR}/etc/rc.conf
 	sendmail_outbound_enable="NO"
 	sendmail_msp_queue_enable="NO"
 EOF
+#Ensure /boot/entropy exists
+sudo dd if=/dev/random of=${DESTDIR}/boot/entropy bs=4k count=1
+
