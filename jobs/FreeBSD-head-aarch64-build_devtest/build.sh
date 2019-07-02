@@ -12,8 +12,12 @@ SRCCONF=${WORKSPACE}/${JOB_BASE}/src.conf
 
 set -ex
 
-export MAKEOBJDIRPREFIX=${WORKSPACE}/obj
-rm -fr ${MAKEOBJDIRPREFIX}
+if [ ! -n ${MOUNT_OBJ} ]; then
+	export MAKEOBJDIRPREFIX=${WORKSPACE}/obj
+	rm -fr ${MAKEOBJDIRPREFIX}
+else
+	export MAKEOBJDIRPREFIX=/usr/${MOUNT_OBJ}
+fi
 
 MAKECONF=${MAKECONF:-/dev/null}
 SRCCONF=${SRCCONF:-/dev/null}
