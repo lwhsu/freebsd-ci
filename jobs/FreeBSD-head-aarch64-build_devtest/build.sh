@@ -18,6 +18,7 @@ if [ ! -n ${MOUNT_OBJ} ]; then
 else
 	export MAKEOBJDIRPREFIX=/usr/${MOUNT_OBJ}
 fi
+df #XXX: debug
 
 MAKECONF=${MAKECONF:-/dev/null}
 SRCCONF=${SRCCONF:-/dev/null}
