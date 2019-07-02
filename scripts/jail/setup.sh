@@ -106,7 +106,7 @@ sudo jexec ${JNAME} sh -c "sed -i.bak -e 's,pkg+http://pkg.FreeBSD.org/\${ABI}/q
 echo "done."
 
 echo -n "Setting up pkg ..."
-sudo jexec ${JNAME} sh -c "env ASSUME_ALWAYS_YES=yes pkg -r update"
+sudo jexec ${JNAME} sh -c "env ASSUME_ALWAYS_YES=yes pkg update"
 echo  "done."
 
 echo -n "Installing default pkg list ..."
