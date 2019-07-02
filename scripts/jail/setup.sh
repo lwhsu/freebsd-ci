@@ -64,6 +64,12 @@ if [ -n "${MOUNT_REPO}" ]; then
 	sudo mount -t nullfs ${WORKSPACE}/${MOUNT_REPO} ${JPATH}/usr/${MOUNT_REPO}
 fi
 
+if [ -n "${MOUNT_OBJ}" ]; then
+	mkdir -p ${WORKSPACE}/${MOUNT_OBJ}
+	sudo mkdir -p ${JPATH}/usr/${MOUNT_OBJ}
+	sudo mount -t nullfs ${WORKSPACE}/${MOUNT_OBJ} ${JPATH}/usr/${MOUNT_OBJ}
+fi
+
 echo "Configuring DNS ..."
 if [ -n "${BUILDER_RESOLV_CONF}" ]; then
 	printf "${BUILDER_RESOLV_CONF}" | sudo tee ${JPATH}/etc/resolv.conf

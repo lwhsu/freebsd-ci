@@ -18,14 +18,18 @@ if [ ${BUILDER_NETIF} -a ${BUILDER_JAIL_IP4} ]; then
 	sudo ifconfig ${BUILDER_NETIF} inet ${BUILDER_JAIL_IP4} -alias
 fi
 
+_MOUNT_PATHS="dev ${WORKSPACE_IN_JAIL#/}"
 if [ -n "${MOUNT_REPO}" ]; then
-	_MOUNT_PATHS="usr/${MOUNT_REPO#/} dev ${WORKSPACE_IN_JAIL#/}"
-	for _MOUNT_PATH in ${_MOUNT_PATHS}; do
-		if [ -d ${JPATH}/${_MOUNT_PATH} ] && df ${JPATH}/${_MOUNT_PATH} | grep -q ${JPATH}/${_MOUNT_PATH}; then
-			sudo umount ${JPATH}/${_MOUNT_PATH}
-		fi
-	done
+	_MOUNT_PATHS="${_MOUNT_PATHS} usr/${MOUNT_REPO#/}"
 fi
+if [ -n "${MOUNT_OBJ}" ]; then
+	_MOUNT_PATHS="${_MOUNT_PATHS} usr/${MOUNT_OBJ#/}"
+fi
+for _MOUNT_PATH in ${_MOUNT_PATHS}; do
+	if [ -d ${JPATH}/${_MOUNT_PATH} ] && df ${JPATH}/${_MOUNT_PATH} | grep -q ${JPATH}/${_MOUNT_PATH}; then
+		sudo umount ${JPATH}/${_MOUNT_PATH}
+	fi
+done
 
 if [ -d ${ZFS_PARENT}/${JNAME} ]; then
 	sudo chflags -R noschg ${ZFS_PARENT}/${JNAME}
