@@ -4,12 +4,15 @@
 
 echo "clean jail ${JNAME}"
 
+_MOUNT_PATHS=""
 if [ -n "${MOUNT_OBJ}" ]; then
 	_MOUNT_PATHS="${_MOUNT_PATHS} usr/${MOUNT_OBJ#/}"
+fi
+for _MOUNT_PATH in ${_MOUNT_PATHS}; do
 	if [ -d ${JPATH}/${_MOUNT_PATH} ] && df ${JPATH}/${_MOUNT_PATH} | grep -q ${JPATH}/${_MOUNT_PATH}; then
 		sudo umount ${JPATH}/${_MOUNT_PATH}
 	fi
-fi
+done
 
 if jls -j ${JNAME}; then
 	sudo jexec ${JNAME} sh -c "find ${WORKSPACE_IN_JAIL} -d -not -user jenkins -flags +schg -exec chflags noschg {} \;"
