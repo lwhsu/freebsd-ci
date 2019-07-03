@@ -25,23 +25,26 @@ SRCCONF=${SRCCONF:-/dev/null}
 
 cd /usr/src
 
-sudo make -j ${JFLAG} -DNO_CLEAN \
-	kernel-toolchain \
-	TARGET=${TARGET} \
-	TARGET_ARCH=${TARGET_ARCH} \
-	__MAKE_CONF=${MAKECONF} \
-	SRCCONF=${SRCCONF}
-sudo make -j ${JFLAG} -DNO_CLEAN \
-	buildkernel \
-	TARGET=${TARGET} \
-	TARGET_ARCH=${TARGET_ARCH} \
-	__MAKE_CONF=${MAKECONF} \
-	SRCCONF=${SRCCONF}
+#sudo make -j ${JFLAG} -DNO_CLEAN \
+#	kernel-toolchain \
+#	TARGET=${TARGET} \
+#	TARGET_ARCH=${TARGET_ARCH} \
+#	__MAKE_CONF=${MAKECONF} \
+#	SRCCONF=${SRCCONF}
+#sudo make -j ${JFLAG} -DNO_CLEAN \
+#	buildkernel \
+#	TARGET=${TARGET} \
+#	TARGET_ARCH=${TARGET_ARCH} \
+#	__MAKE_CONF=${MAKECONF} \
+#	SRCCONF=${SRCCONF}
 
 cd /usr/src/release
 
 sudo make clean
 sudo mkdir -p /usr/obj/usr/src/${TARGET}.${TARGET_ARCH}/release
+sudo fetch https://artifact.ci.freebsd.org/snapshot/head/r${SVN_REVISION}/${TARGET}/${TARGET_ARCH}/kernel.txz \
+	-o /usr/obj/usr/src/${TARGET}.${TARGET_ARCH}/release/kernel.txz
+sudo touch /usr/obj/usr/src/${TARGET}.${TARGET_ARCH}/release/kernel.txz
 sudo fetch https://artifact.ci.freebsd.org/snapshot/head/r${SVN_REVISION}/${TARGET}/${TARGET_ARCH}/base.txz \
 	-o /usr/obj/usr/src/${TARGET}.${TARGET_ARCH}/release/base.txz
 sudo touch /usr/obj/usr/src/${TARGET}.${TARGET_ARCH}/release/base.txz
