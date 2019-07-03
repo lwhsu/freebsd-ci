@@ -74,6 +74,8 @@ class ConsoleHandler(object):
     def do_login(self):
         self.console.sendline("root")
         self.console.expect(ConsoleHandler.CMDLINE_RE)
+        self.console.sendline("uname -a")
+        self.console.expect(ConsoleHandler.CMDLINE_RE)
         print("Boot was successful. Running tests ...")
         failed_tests = 0
         num_tests = len(self.tests)
