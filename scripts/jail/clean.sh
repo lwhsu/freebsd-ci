@@ -15,8 +15,8 @@ for _MOUNT_PATH in ${_MOUNT_PATHS}; do
 done
 
 if jls -j ${JNAME}; then
-	sudo jexec ${JNAME} sh -c "find ${WORKSPACE_IN_JAIL} -d -not -user jenkins -flags +schg -exec chflags noschg {} \;"
-	sudo jexec ${JNAME} sh -c "find ${WORKSPACE_IN_JAIL} -d -not -user jenkins -exec rm -rf {} \;"
+	sudo jexec ${JNAME} sh -c "find ${WORKSPACE_IN_JAIL}/src -d -not -user jenkins -flags +schg -exec chflags noschg {} \;"
+	sudo jexec ${JNAME} sh -c "find ${WORKSPACE_IN_JAIL}/src -d -not -user jenkins -exec rm -rf {} \;"
 	sudo jail -r ${JNAME}
 fi
 
