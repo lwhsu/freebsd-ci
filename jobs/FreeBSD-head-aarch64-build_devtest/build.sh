@@ -1,12 +1,12 @@
 #!/bin/sh
 
 JOB_BASE=`dirname $0`
-cat ${JOB_BASE}/${CONF_NAME}-NFS | tee ${WORKSPACE}/src/sys/arm64/conf/${CONF_NAME}-NFS
+#cat ${JOB_BASE}/${CONF_NAME}-NFS | tee ${WORKSPACE}/src/sys/arm64/conf/${CONF_NAME}-NFS
 
 JFLAG=${BUILDER_JFLAG}
 TARGET=${FBSD_TARGET}
 TARGET_ARCH=${FBSD_TARGET_ARCH}
-SRCCONF=${WORKSPACE}/${JOB_BASE}/src.conf
+#SRCCONF=${WORKSPACE}/${JOB_BASE}/src.conf
 
 ## common script
 
