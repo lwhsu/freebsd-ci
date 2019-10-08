@@ -47,6 +47,9 @@ sudo mkdir -p /usr/obj/usr/src/${TARGET}.${TARGET_ARCH}/release
 sudo fetch https://artifact.ci.freebsd.org/snapshot/head/r${SVN_REVISION}/${TARGET}/${TARGET_ARCH}/base.txz \
 	-o /usr/obj/usr/src/${TARGET}.${TARGET_ARCH}/release/base.txz
 sudo touch /usr/obj/usr/src/${TARGET}.${TARGET_ARCH}/release/base.txz
+sudo fetch https://artifact.ci.freebsd.org/snapshot/head/r${SVN_REVISION}/${TARGET}/${TARGET_ARCH}/tests.txz \
+	-o /usr/obj/usr/src/${TARGET}.${TARGET_ARCH}/release/tests.txz
+sudo touch /usr/obj/usr/src/${TARGET}.${TARGET_ARCH}/release/tests.txz
 sudo make -DNOPORTS -DNOSRC -DNODOC packagesystem \
 	TARGET=${TARGET} TARGET_ARCH=${TARGET_ARCH} \
 	MAKE="make -DDB_FROM_SRC __MAKE_CONF=${MAKECONF} SRCCONF=${SRCCONF}"
